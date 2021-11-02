@@ -20,14 +20,20 @@ const initPrompt = () => {
     {
       type: "select",
       name: "year",
-      message: "Pick a year",
+      message: "Year",
       choices: years.map((year) => ({ title: year, value: year })),
       initial: 0,
     },
     {
+      type: "text",
+      name: "name",
+      message: "Directory name",
+      initial: (prev) => `aoc${prev}`,
+    },
+    {
       type: "select",
       name: "language",
-      message: "Pick a language",
+      message: "Language",
       choices: [
         { title: "JavaScript", value: "js" },
         { title: "TypeScript", value: "ts" },
@@ -35,15 +41,20 @@ const initPrompt = () => {
       initial: 0,
     },
     {
-      type: "select",
-      name: "packageManager",
-      message: "Which package manager do you use?",
-      choices: [
-        { title: "NPM", value: "npm" },
-        { title: "Yarn", value: "yarn" },
-        { title: "pnpm", value: "pnpm" },
-      ],
-      initial: 0,
+      type: (prev) => (prev === "ts" ? "toggle" : null),
+      name: "strict",
+      message: "Strict mode",
+      initial: true,
+      active: "yes",
+      inactive: "no",
+    },
+    {
+      type: "toggle",
+      name: "semicolons",
+      message: "Semicolons",
+      initial: true,
+      active: "yes",
+      inactive: "no",
     },
     {
       type: "text",
@@ -52,12 +63,15 @@ const initPrompt = () => {
       initial: author,
     },
     {
-      type: "toggle",
-      name: "semicolons",
-      message: "Semicolons?",
-      initial: true,
-      active: "yes",
-      inactive: "no",
+      type: "select",
+      name: "packageManager",
+      message: "Package manager",
+      choices: [
+        { title: "NPM", value: "npm" },
+        { title: "Yarn", value: "yarn" },
+        { title: "pnpm", value: "pnpm" },
+      ],
+      initial: 0,
     },
   ])
 }

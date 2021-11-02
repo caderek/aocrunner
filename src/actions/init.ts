@@ -21,7 +21,7 @@ const init = async () => {
 
   const setup: Setup = await initPrompt()
 
-  const dir = `aoc${setup.year}`
+  const dir = setup.name
   const srcDir = path.join(dir, "src")
 
   if (fs.existsSync(dir)) {
@@ -37,7 +37,7 @@ const init = async () => {
   save(dir, ".prettierignore", prettierignoreTXT(setup))
 
   if (setup.language === "ts") {
-    save(dir, "tsconfig.json", tsconfigJSON)
+    save(dir, "tsconfig.json", tsconfigJSON(setup))
   }
 
   const templatesDir = path.resolve(
