@@ -1,6 +1,6 @@
 {
   "name": "aocrunner",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Advent of Code runner",
   "bin": "lib/index.js",
   "type": "module",
@@ -15,7 +15,8 @@
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
     "@types/node": "^16.11.6",
-    "@types/prompts": "^2.0.14"
+    "@types/prompts": "^2.0.14",
+    "ts-node": "^10.4.0"
   },
   "dependencies": {
     "chokidar": "^3.5.2",
