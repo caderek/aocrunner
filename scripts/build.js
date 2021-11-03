@@ -1,3 +1,4 @@
+import { stripIndent } from "common-tags"
 import { spawnSync } from "child_process"
 import fs from "fs"
 import path from "path"
@@ -60,10 +61,27 @@ const files = getAllFiles("src")
 if (watch) {
   build(files)
 
+  console.log("")
+  console.log(stripIndent`
+    Type:
+      ${kleur.magenta("fetch")} or ${kleur.magenta("f")} - to fetch the input
+      ${kleur.magenta("send")}  or ${kleur.magenta("s")} - to send the solution
+  `)
+
   chokidar
     .watch("src", { ignoreInitial: true })
     .on("add", (path) => build(path))
     .on("change", (path) => build(path))
+
+  process.stdin.on("data", function (chunk) {
+    const data = chunk.toString()
+
+    if (/f(etch){0,1}\n/.test(data)) {
+      console.log("Fetching!")
+    } else if (/s(end){0,1}\n/.test(data)) {
+      console.log("Send!")
+    }
+  })
 } else {
   if (fs.existsSync("lib")) {
     console.log("Removing old build...")
