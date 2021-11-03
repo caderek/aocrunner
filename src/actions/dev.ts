@@ -1,8 +1,8 @@
 import { stripIndent } from "common-tags"
 import chokidar from "chokidar"
 import kleur from "kleur"
-import getAllFiles from "../utils/getAllFiles"
-import buildSource from "./processes/buildSource"
+import getAllFiles from "../utils/getAllFiles.js"
+import buildSource from "./processes/buildSource.js"
 
 const dev = (dayRaw: string | undefined) => {
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]

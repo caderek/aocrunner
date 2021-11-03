@@ -1,7 +1,7 @@
 import fs from "fs"
-import getAllFiles from "../utils/getAllFiles"
-import buildSource from "./processes/buildSource"
-import buildDefinitions from "./processes/buildDefinitions"
+import getAllFiles from "../utils/getAllFiles.js"
+import buildSource from "./processes/buildSource.js"
+import buildDefinitions from "./processes/buildDefinitions.js"
 
 const build = () => {
   if (fs.existsSync("dist")) {
