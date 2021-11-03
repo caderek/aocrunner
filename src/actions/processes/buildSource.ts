@@ -4,8 +4,8 @@ import path from "path"
 const buildSource = (input: string | string[]) => {
   const files = Array.isArray(input) ? input : [input]
   const outDir = Array.isArray(input)
-    ? "lib"
-    : path.parse(input).dir.replace(/^src/, "lib")
+    ? "dist"
+    : path.parse(input).dir.replace(/^src/, "dist")
 
   spawnSync(
     "npx",

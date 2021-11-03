@@ -4,9 +4,9 @@ import buildSource from "./processes/buildSource"
 import buildDefinitions from "./processes/buildDefinitions"
 
 const build = () => {
-  if (fs.existsSync("lib")) {
+  if (fs.existsSync("dist")) {
     console.log("Removing old build...")
-    fs.rmSync("lib", { recursive: true })
+    fs.rmSync("dist", { recursive: true })
     console.log("Building source files...")
   }
 

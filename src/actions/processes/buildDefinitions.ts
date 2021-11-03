@@ -4,7 +4,7 @@ import kleur from "kleur"
 const buildDefinitions = () => {
   console.log("\nBuilding definition files...\n")
   const t0 = process.hrtime.bigint()
-  spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", "lib"], {
+  spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", "dist"], {
     stdio: "inherit",
   })
   const t1 = process.hrtime.bigint()
