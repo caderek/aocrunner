@@ -12,7 +12,7 @@ switch (String(command || "").toLowerCase()) {
     init()
     break
   }
-  case "dev": {
+  case "day": {
     dev(args[0])
     break
   }

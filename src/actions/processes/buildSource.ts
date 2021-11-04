@@ -1,7 +1,7 @@
 import { spawnSync } from "child_process"
 import path from "path"
 
-const buildSource = (input: string | string[]) => {
+const buildSource = (input: string | string[], sourcemap: boolean = true) => {
   const files = Array.isArray(input) ? input : [input]
   const outDir = Array.isArray(input)
     ? "dist"
@@ -16,7 +16,7 @@ const buildSource = (input: string | string[]) => {
       `--outdir=${outDir}`,
       "--platform=node",
       "--target=node16",
-      "--sourcemap",
+      ...(sourcemap ? ["--sourcemap"] : []),
     ],
     { stdio: "inherit" },
   )

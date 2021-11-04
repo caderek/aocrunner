@@ -12,7 +12,7 @@ const build = () => {
 
   const files = getAllFiles("src")
 
-  buildSource(files)
+  buildSource(files, false)
   buildDefinitions()
 }
 
