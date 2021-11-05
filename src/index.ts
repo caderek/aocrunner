@@ -8,7 +8,7 @@ type Tests = { input: string; expected: any }[]
 type Solution = (input: string) => any
 
 type Solutions = {
-  part1: {
+  part1?: {
     solution: Solution
     tests?: Tests
   }
@@ -35,6 +35,16 @@ const runTests = async (tests: Tests, solution: Solution, part: number) => {
   }
 }
 
+const runSolution = async (solution: Solution, input: string) => {
+  const t0 = process.hrtime.bigint()
+  const result = await solution(input)
+  const t1 = process.hrtime.bigint()
+  const time = (Number(t1 - t0) / 1e6).toFixed(3)
+
+  console.log(`Part 1 (in ${time}ms):`)
+  console.dir(result)
+}
+
 const runAsync = async (solutions: Solutions, inputFile: string) => {
   if (solutions?.part1?.tests) {
     await runTests(solutions.part1.tests, solutions.part1.solution, 1)
@@ -46,7 +56,13 @@ const runAsync = async (solutions: Solutions, inputFile: string) => {
 
   const input = fs.readFileSync(inputFile).toString()
 
-  console.log(input)
+  if (solutions.part1) {
+    await runSolution(solutions.part1.solution, input)
+  }
+
+  if (solutions.part2) {
+    await runSolution(solutions.part2.solution, input)
+  }
 }
 
 const run = (solutions: Solutions, inputFile?: string) => {

@@ -46,10 +46,8 @@ const dev = (dayRaw: string | undefined) => {
 
   console.log("")
   console.log(stripIndent`
-    Type:
-    
-      ${boldMagenta("fetch")} or ${boldMagenta("f")} - to fetch the input
-      ${boldMagenta("send")}  or ${boldMagenta("s")} - to send the solution
+    Type ${boldMagenta("fetch")} or ${boldMagenta("f")} - to fetch the input
+    Type ${boldMagenta("send")}  or ${boldMagenta("s")} - to send the solution
   `)
 
   runSolution(dayNum, indexFile)
