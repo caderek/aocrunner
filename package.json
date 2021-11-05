@@ -1,8 +1,9 @@
 {
   "name": "aocrunner",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Advent of Code runner",
-  "bin": "lib/index.js",
+  "main": "lib/index.js",
+  "bin": "lib/cli.js",
   "type": "module",
   "scripts": {
     "dev": "node scripts/build.js --watch",
@@ -22,6 +23,7 @@
     "chokidar": "^3.5.2",
     "common-tags": "^1.8.0",
     "esbuild": "^0.13.12",
+    "get-caller-file": "^2.0.5",
     "kleur": "^4.1.4",
     "prettier": "^2.4.1",
     "prompts": "^2.4.2",

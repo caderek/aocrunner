@@ -35,6 +35,7 @@ const dev = (dayRaw: string | undefined) => {
   if (!fs.existsSync(toDir)) {
     console.log("Creating from template...")
     copy(fromDir, toDir)
+    fs.writeFileSync(path.join(toDir, "input.txt"), "")
   }
 
   const files = getAllFiles("src")
