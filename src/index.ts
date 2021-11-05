@@ -68,8 +68,15 @@ const runAsync = async (solutions: Solutions, inputFile: string) => {
 const run = (solutions: Solutions, inputFile?: string) => {
   if (inputFile === undefined) {
     const callerFile = getCallerFile().replace(/(file:\\\\)|(file:\/\/)/, "")
-    const dir = path.parse(callerFile).dir
-    inputFile = path.join(dir, "input.txt")
+    const dir = path.parse(callerFile).dir.split(path.sep)
+
+    const lastDist = dir.lastIndexOf("dist")
+
+    if (lastDist !== -1) {
+      dir[lastDist] = "src"
+    }
+
+    inputFile = path.join(...dir, "input.txt")
     console.log(inputFile)
   }
 
