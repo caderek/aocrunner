@@ -16,6 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
+    "@types/jsdom": "^16.2.13",
     "@types/node": "^16.11.6",
     "@types/prompts": "^2.0.14",
     "ts-node": "^10.4.0"
@@ -23,9 +24,12 @@
   "dependencies": {
     "chokidar": "^3.5.2",
     "common-tags": "^1.8.0",
+    "dotenv": "^10.0.0",
     "esbuild": "^0.13.12",
     "get-caller-file": "^2.0.5",
+    "jsdom": "^18.0.1",
     "kleur": "^4.1.4",
+    "node-fetch": "^3.0.0",
     "prettier": "^2.4.1",
     "prompts": "^2.4.2",
     "tslib": "^2.3.1",

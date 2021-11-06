@@ -7,3 +7,16 @@ export type Setup = {
   semicolons: boolean
   strict: boolean
 }
+
+type DayConfig = {
+  solved: boolean
+  result: any
+  attempts: any[]
+}
+
+export type Config = {
+  version: number
+  year: number
+  language: "js" | "ts"
+  days: { part1: DayConfig; part2: DayConfig }[]
+}

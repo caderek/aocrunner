@@ -3,6 +3,7 @@ import path from "path"
 import kleur from "kleur"
 import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
+import type { Config } from "./types/common"
 
 type Tests = { input: string; expected: any }[]
 type Solution = (input: string) => any
@@ -16,6 +17,15 @@ type Solutions = {
     solution: Solution
     tests?: Tests
   }
+}
+
+const readConfig = (): Config => {
+  return JSON.parse(fs.readFileSync(".aocrunner.json").toString())
+}
+
+const saveConfig = (config: Config) => {
+  const data = JSON.stringify(config, null, 2)
+  fs.writeFileSync(".aocrunner.json", data)
 }
 
 const runTests = async (tests: Tests, solution: Solution, part: number) => {
@@ -43,9 +53,17 @@ const runSolution = async (solution: Solution, input: string) => {
 
   console.log(`Part 1 (in ${time}ms):`)
   console.dir(result)
+
+  return result
 }
 
-const runAsync = async (solutions: Solutions, inputFile: string) => {
+const runAsync = async (
+  solutions: Solutions,
+  inputFile: string,
+  day: number,
+) => {
+  const config = readConfig()
+
   if (solutions?.part1?.tests) {
     await runTests(solutions.part1.tests, solutions.part1.solution, 1)
   }
@@ -56,20 +74,39 @@ const runAsync = async (solutions: Solutions, inputFile: string) => {
 
   const input = fs.readFileSync(inputFile).toString()
 
+  let result1
+  let result2
+
   if (solutions.part1) {
-    await runSolution(solutions.part1.solution, input)
+    result1 = await runSolution(solutions.part1.solution, input)
   }
 
   if (solutions.part2) {
-    await runSolution(solutions.part2.solution, input)
+    result2 = await runSolution(solutions.part2.solution, input)
   }
+
+  if (result1 !== undefined) {
+    config.days[day - 1].part1.result = result1
+  }
+
+  if (result2 !== undefined) {
+    config.days[day - 1].part2.result = result2
+  }
+
+  saveConfig(config)
 }
 
 const run = (solutions: Solutions, inputFile?: string) => {
-  if (inputFile === undefined) {
-    const callerFile = getCallerFile().replace(/(file:\\\\)|(file:\/\/)/, "")
-    const dir = path.parse(callerFile).dir.split(path.sep)
+  const callerFile = getCallerFile().replace(/(file:\\\\)|(file:\/\/)/, "")
+  const dir = path.parse(callerFile).dir.split(path.sep)
+  const day = Number(
+    [...dir]
+      .reverse()
+      .find((x) => /day\d\d/.test(x))
+      ?.slice(-2),
+  )
 
+  if (inputFile === undefined) {
     const lastDist = dir.lastIndexOf("dist")
 
     if (lastDist !== -1) {
@@ -91,7 +128,7 @@ const run = (solutions: Solutions, inputFile?: string) => {
     return
   }
 
-  runAsync(solutions, inputFile)
+  runAsync(solutions, inputFile, day)
 }
 
 export default run

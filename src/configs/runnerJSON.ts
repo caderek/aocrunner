@@ -1,6 +1,6 @@
-import type { Setup } from "../types/common"
+import type { Setup, Config } from "../types/common"
 
-const aocrunnerJSON = ({ year, language }: Setup) => {
+const aocrunnerJSON = ({ year, language }: Setup): Config => {
   return {
     version: 1,
     year,
