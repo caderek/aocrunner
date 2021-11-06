@@ -1,6 +1,6 @@
 {
   "name": "aocrunner",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "description": "Advent of Code runner",
   "main": "lib/index.js",
   "bin": "lib/cli.js",

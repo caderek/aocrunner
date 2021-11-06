@@ -39,7 +39,7 @@ const runSolution = async (solution: Solution, input: string) => {
   const t0 = process.hrtime.bigint()
   const result = await solution(input)
   const t1 = process.hrtime.bigint()
-  const time = (Number(t1 - t0) / 1e6).toFixed(3)
+  const time = (Number(t1 - t0) / 1e6).toFixed(2)
 
   console.log(`Part 1 (in ${time}ms):`)
   console.dir(result)
@@ -76,8 +76,7 @@ const run = (solutions: Solutions, inputFile?: string) => {
       dir[lastDist] = "src"
     }
 
-    inputFile = path.join(...dir, "input.txt")
-    console.log(inputFile)
+    inputFile = path.join(dir.join(path.sep), "input.txt")
   }
 
   if (!fs.existsSync(inputFile)) {

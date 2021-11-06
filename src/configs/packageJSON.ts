@@ -17,7 +17,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
     license: "ISC",
     devDependencies: {
       "@types/node": "^16.11.6",
-      aocrunner: "^0.2.15",
+      aocrunner: "^0.2.17",
     },
     dependencies: {},
     engines: { node: ">=16.0.0" },

@@ -11,6 +11,7 @@ import tsconfigJSON from "../configs/tsconfigJSON.js"
 import prettierJSON from "../configs/prettierJSON.js"
 import gitignoreTXT from "../configs/gitignoreTXT.js"
 import prettierignoreTXT from "../configs/prettierignoreTXT.js"
+import runnerJSON from "../configs/runnerJSON.js"
 
 import type { Setup } from "../types/common"
 
@@ -35,6 +36,7 @@ const init = async () => {
   save(dir, ".prettierrc.json", prettierJSON(setup))
   save(dir, ".gitignore", gitignoreTXT(setup))
   save(dir, ".prettierignore", prettierignoreTXT(setup))
+  save(dir, ".aocrunner.json", runnerJSON(setup))
 
   if (setup.language === "ts") {
     save(dir, "tsconfig.json", tsconfigJSON(setup))
