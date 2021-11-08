@@ -6,11 +6,10 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-let all = process.argv
-  .filter((arg) => !["npx", "pnpx", "run"].includes(arg))
+const [command, ...args] = process.argv
+  .filter((arg) => !["npm", "pnpm", "yarn", "npx", "pnpx", "run"].includes(arg))
+  .slice(1)
   .map((v) => v.trim())
-
-const [command, ...args] = all
 
 switch (String(command || "").toLowerCase()) {
   case "init": {
