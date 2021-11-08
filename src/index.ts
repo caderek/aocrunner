@@ -23,7 +23,7 @@ type Solutions = {
 const runTests = async (
   tests: Tests,
   solution: Solution,
-  part: number,
+  part: 1 | 2,
   trimTestInputs = true,
 ) => {
   for (let i = 0; i < tests.length; i++) {
@@ -46,13 +46,13 @@ const runTests = async (
   }
 }
 
-const runSolution = async (solution: Solution, input: string) => {
+const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   const t0 = process.hrtime.bigint()
   const result = await solution(input)
   const t1 = process.hrtime.bigint()
   const time = (Number(t1 - t0) / 1e6).toFixed(2)
 
-  console.log(`Part 1 (in ${time}ms):`)
+  console.log(`Part ${part} (in ${time}ms):`)
   console.dir(result)
 
   return result
@@ -89,11 +89,11 @@ const runAsync = async (
   let result2
 
   if (solutions.part1) {
-    result1 = await runSolution(solutions.part1.solution, input)
+    result1 = await runSolution(solutions.part1.solution, input, 1)
   }
 
   if (solutions.part2) {
-    result2 = await runSolution(solutions.part2.solution, input)
+    result2 = await runSolution(solutions.part2.solution, input, 2)
   }
 
   if (result1 !== undefined) {
