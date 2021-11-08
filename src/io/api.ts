@@ -1,20 +1,22 @@
-require("dotenv").config()
-
 import fetch from "node-fetch"
 import { JSDOM } from "jsdom"
 import { writeFileSync, existsSync, statSync } from "fs"
 
-const strToNum = {
-  one: 1,
-  two: 2,
-  three: 3,
-  four: 4,
-  five: 5,
-  six: 6,
-  seven: 7,
-  eight: 8,
-  nine: 9,
-  ten: 10,
+const strToNum = (time: string) => {
+  const entries: { [key: string]: number } = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+  }
+
+  return entries[time] || NaN
 }
 
 let canSubmit = true
@@ -36,6 +38,8 @@ const handleErrors = (e: Error) => {
     )
     console.log(e)
   }
+
+  return false
 }
 
 const getInput = async (year: number, day: number, path: string) => {
@@ -68,13 +72,13 @@ const sendSolution = (
   day: number,
   part: 1 | 2,
   solution: number | string,
-) => {
+): Promise<boolean> => {
   if (!canSubmit) {
     console.log("you have to wait!")
-    return
+    return Promise.resolve(false)
   }
 
-  fetch(`https://adventofcode.com/${year}/day/${day}/answer`, {
+  return fetch(`https://adventofcode.com/${year}/day/${day}/answer`, {
     headers: {
       cookie: `session=${process.env.AOC_SESSION_KEY}`,
       "content-type": "application/x-www-form-urlencoded",
@@ -98,18 +102,19 @@ const sendSolution = (
           : "Can't find the main element"
 
       if (info.includes("That's the right answer")) {
-        console.log(`\nStatus: PART ${part} SOLVED!`)
+        console.log(`Status: PART ${part} SOLVED!`)
+        return true
       } else if (info.includes("That's not the right answer")) {
-        console.log("\nStatus: WRONG ANSWER")
+        console.log("Status: WRONG ANSWER")
         console.log(info)
       } else if (info.includes("You gave an answer too recently")) {
-        console.log("\nStatus: TO SOON")
+        console.log("Status: TO SOON")
       } else if (
         info.includes("You don't seem to be solving the right level")
       ) {
-        console.log("\nStatus: ALREADY COMPLETED or LOCKED")
+        console.log("Status: ALREADY COMPLETED or LOCKED")
       } else {
-        console.log("\nStatus: UNKNOWN RESPONSE\n")
+        console.log("Status: UNKNOWN RESPONSE\n")
         console.log(info)
       }
 
@@ -119,7 +124,7 @@ const sendSolution = (
       const waitNum = info.match(/\d+\s*(s|m|h|d)/g)
 
       if (waitStr !== null || waitNum !== null) {
-        const waitTime = {
+        const waitTime: { [key: string]: number } = {
           s: 0,
           m: 0,
           h: 0,
@@ -128,7 +133,7 @@ const sendSolution = (
 
         if (waitStr !== null) {
           const [_, time, unit] = waitStr
-          waitTime[unit[0]] = strToNum[time]
+          waitTime[unit[0]] = strToNum(time)
         } else if (waitNum !== null) {
           waitNum.forEach((x) => {
             waitTime[x.slice(-1)] = Number(x.slice(0, -1))
@@ -152,6 +157,8 @@ const sendSolution = (
 
         console.log(`Next request possible in: ${delayStr}`)
       }
+
+      return false
     })
     .catch(handleErrors)
 }

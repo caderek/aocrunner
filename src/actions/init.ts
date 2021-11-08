@@ -12,6 +12,7 @@ import prettierJSON from "../configs/prettierJSON.js"
 import gitignoreTXT from "../configs/gitignoreTXT.js"
 import prettierignoreTXT from "../configs/prettierignoreTXT.js"
 import runnerJSON from "../configs/runnerJSON.js"
+import envTXT from "../configs/envTXT.js"
 
 import type { Setup } from "../types/common"
 
@@ -37,6 +38,7 @@ const init = async () => {
   save(dir, ".gitignore", gitignoreTXT(setup))
   save(dir, ".prettierignore", prettierignoreTXT(setup))
   save(dir, ".aocrunner.json", runnerJSON(setup))
+  save(dir, ".env", envTXT)
 
   if (setup.language === "ts") {
     save(dir, "tsconfig.json", tsconfigJSON(setup))
@@ -59,9 +61,17 @@ const init = async () => {
       ? "yarn"
       : "pnpm install"
 
+  const formatCommand =
+    setup.packageManager === "npm"
+      ? "npm run format"
+      : setup.packageManager === "yarn"
+      ? "yarn format"
+      : "pnpm format"
+
   console.log("\nInstalling dependencies...\n")
 
   execSync(installCommand, { cwd: dir, stdio: "inherit" })
+  execSync(formatCommand, { cwd: dir, stdio: "inherit" })
 
   console.log(kleur.green("Done!"))
 }

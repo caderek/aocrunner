@@ -10,6 +10,7 @@ const gitignoreTXT = ({ language }: Setup) => {
     */**/*.log
     .idea
     .vscode
+    .env
     ${language === "ts" ? "lib" : ""}
   `
 }

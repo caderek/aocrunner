@@ -7,6 +7,33 @@ import getAllFiles from "../utils/getAllFiles.js"
 import buildSource from "./processes/buildSource.js"
 import runSolution from "./processes/runSolution.js"
 import copy from "../io/copy.js"
+import { readConfig, saveConfig } from "../io/config.js"
+import { getInput, sendSolution } from "../io/api.js"
+
+import type { Config } from "../types/common"
+
+const send = async (config: Config, dayNum: number, part: 1 | 2) => {
+  console.log(`\nPart ${part}:`)
+  const dayData =
+    part === 1 ? config.days[dayNum - 1].part1 : config.days[dayNum - 1].part2
+
+  if (dayData.solved) {
+    console.log(`Already solved!`)
+    return true
+  } else if (dayData.result !== null) {
+    const accepted = await sendSolution(config.year, dayNum, 1, dayData.result)
+
+    if (accepted) {
+      config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
+      saveConfig(config)
+      return true
+    }
+  } else {
+    console.log(`Solution is undefined, skipping.`)
+  }
+
+  return false
+}
 
 const dev = (dayRaw: string | undefined) => {
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
@@ -27,6 +54,7 @@ const dev = (dayRaw: string | undefined) => {
   const fromDir = path.join("src", "template")
   const toDir = path.join("src", dayDir)
   const indexFile = path.join("dist", dayDir, "index.js")
+  const inputPath = path.join(toDir, "input.txt")
 
   if (!fs.existsSync(fromDir)) {
     console.log(kleur.red("Template folder does not exist!"))
@@ -35,7 +63,7 @@ const dev = (dayRaw: string | undefined) => {
   if (!fs.existsSync(toDir)) {
     console.log("Creating from template...")
     copy(fromDir, toDir)
-    fs.writeFileSync(path.join(toDir, "input.txt"), "")
+    fs.writeFileSync(inputPath, "")
   }
 
   const files = getAllFiles("src")
@@ -63,13 +91,18 @@ const dev = (dayRaw: string | undefined) => {
       runSolution(dayNum, indexFile)
     })
 
-  process.stdin.on("data", function (chunk) {
+  process.stdin.on("data", async (chunk) => {
     const data = chunk.toString()
+    const config = readConfig()
 
     if (/f(etch){0,1}\n/.test(data)) {
-      console.log("Fetching!")
+      getInput(config.year, dayNum, inputPath)
     } else if (/s(end){0,1}\n/.test(data)) {
-      console.log("Send!")
+      const solved = await send(config, dayNum, 1)
+
+      if (solved) {
+        await send(config, dayNum, 2)
+      }
     }
   })
 }

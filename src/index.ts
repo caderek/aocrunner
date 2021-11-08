@@ -3,7 +3,7 @@ import path from "path"
 import kleur from "kleur"
 import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
-import type { Config } from "./types/common"
+import { saveConfig, readConfig } from "./io/config.js"
 
 type Tests = { input: string; expected: any }[]
 type Solution = (input: string) => any
@@ -17,15 +17,6 @@ type Solutions = {
     solution: Solution
     tests?: Tests
   }
-}
-
-const readConfig = (): Config => {
-  return JSON.parse(fs.readFileSync(".aocrunner.json").toString())
-}
-
-const saveConfig = (config: Config) => {
-  const data = JSON.stringify(config, null, 2)
-  fs.writeFileSync(".aocrunner.json", data)
 }
 
 const runTests = async (tests: Tests, solution: Solution, part: number) => {
