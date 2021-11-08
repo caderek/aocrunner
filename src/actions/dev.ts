@@ -24,7 +24,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
     console.log(kleur.yellow("You already tried this solution, skipping."))
     return false
   } else if (dayData.result !== null) {
-    const status = await sendSolution(config.year, dayNum, 1, dayData.result)
+    const status = await sendSolution(config.year, dayNum, part, dayData.result)
 
     if (status === Status["SOLVED"]) {
       config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
