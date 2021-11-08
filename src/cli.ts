@@ -6,7 +6,9 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-let all = process.argv.slice(1).map((v) => v.trim())
+let all = process.argv
+  .filter((arg) => !["npx", "pnpx", "run"].includes(arg))
+  .map((v) => v.trim())
 
 const [command, ...args] = all
 

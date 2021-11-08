@@ -1,11 +1,32 @@
-const hello = "Hello World!"
+import run from "aocrunner"
 
-const a = (x, y) => {
-  return x + y
+const parseInput = (rawInput) => rawInput
+
+const solution1 = async (rawInput) => {
+  const input = parseInput(rawInput)
+
+  // Solution:
 }
 
-const b = a(5, 6)
+const solution2 = async (rawInput) => {
+  const input = parseInput(rawInput)
 
-console.log(hello)
+  // Solution:
+}
 
-// export default hello
+run({
+  part1: {
+    tests: [
+      // { input: ``, expected: "" },
+      // { input: ``, expected: "" },
+    ],
+    solution: solution1,
+  },
+  part2: {
+    tests: [
+      // { input: ``, expected: "" },
+      // { input: ``, expected: "" },
+    ],
+    solution: solution2,
+  },
+})
