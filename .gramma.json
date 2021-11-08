@@ -1,0 +1,24 @@
+{
+  "api_url": "https://api.languagetool.org/v2/check",
+  "api_key": "",
+  "dictionary": [],
+  "language": "en-US",
+  "rules": {
+    "casing": true,
+    "colloquialisms": true,
+    "compounding": true,
+    "confused_words": true,
+    "false_friends": true,
+    "gender_neutrality": true,
+    "grammar": true,
+    "misc": true,
+    "punctuation": true,
+    "redundancy": true,
+    "regionalisms": true,
+    "repetitions": true,
+    "semantics": true,
+    "style": true,
+    "typography": true,
+    "typos": true
+  }
+}

@@ -19,8 +19,9 @@
     "@types/jsdom": "^16.2.13",
     "@types/node": "^16.11.6",
     "@types/prompts": "^2.0.14",
-    "ts-node": "^10.4.0",
-    "prettier": "^2.4.1"
+    "gramma": "^1.6.0",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.4.0"
   },
   "dependencies": {
     "chokidar": "^3.5.2",
