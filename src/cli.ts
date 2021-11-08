@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-let all = process.argv.slice(2).map((v) => v.trim())
+let all = process.argv.slice(1).map((v) => v.trim())
 
 const [command, ...args] = all
 
