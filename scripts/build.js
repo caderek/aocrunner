@@ -38,7 +38,6 @@ const build = (input) => {
       `--outdir=${outDir}`,
       "--platform=node",
       "--target=node16",
-      "--sourcemap",
     ],
     { stdio: "inherit" },
   )
