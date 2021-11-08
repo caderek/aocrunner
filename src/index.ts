@@ -44,6 +44,7 @@ const runTests = async (
       console.log()
     }
   }
+  console.log()
 }
 
 const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {

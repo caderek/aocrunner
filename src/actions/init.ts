@@ -13,6 +13,7 @@ import gitignoreTXT from "../configs/gitignoreTXT.js"
 import prettierignoreTXT from "../configs/prettierignoreTXT.js"
 import runnerJSON from "../configs/runnerJSON.js"
 import envTXT from "../configs/envTXT.js"
+import readmeMD from "../configs/readmeMD.js"
 
 import type { Setup } from "../types/common"
 
@@ -22,6 +23,27 @@ const init = async () => {
   console.log("Initializing")
 
   const setup: Setup = await initPrompt()
+
+  const installCmd =
+    setup.packageManager === "npm"
+      ? "npm i"
+      : setup.packageManager === "yarn"
+      ? "yarn"
+      : "pnpm install"
+
+  const formatCmd =
+    setup.packageManager === "npm"
+      ? "npm run format"
+      : setup.packageManager === "yarn"
+      ? "yarn format"
+      : "pnpm format"
+
+  const startCmd =
+    setup.packageManager === "npm"
+      ? "npm start"
+      : setup.packageManager === "yarn"
+      ? "yarn start"
+      : "pnpm start"
 
   const dir = setup.name
   const srcDir = path.join(dir, "src")
@@ -39,6 +61,7 @@ const init = async () => {
   save(dir, ".prettierignore", prettierignoreTXT(setup))
   save(dir, ".aocrunner.json", runnerJSON(setup))
   save(dir, ".env", envTXT)
+  save(dir, "README.md", readmeMD(setup, startCmd, installCmd))
 
   if (setup.language === "ts") {
     save(dir, "tsconfig.json", tsconfigJSON(setup))
@@ -54,39 +77,18 @@ const init = async () => {
 
   copy(templatesDir, srcDir)
 
-  const installCommand =
-    setup.packageManager === "npm"
-      ? "npm i"
-      : setup.packageManager === "yarn"
-      ? "yarn"
-      : "pnpm install"
-
-  const formatCommand =
-    setup.packageManager === "npm"
-      ? "npm run format"
-      : setup.packageManager === "yarn"
-      ? "yarn format"
-      : "pnpm format"
-
-  const dayCommand =
-    setup.packageManager === "npm"
-      ? "npm run day 1"
-      : setup.packageManager === "yarn"
-      ? "yarn day 1"
-      : "pnpm day 1"
-
   console.log("\nInstalling dependencies...\n")
-  execSync(installCommand, { cwd: dir, stdio: "inherit" })
+  execSync(installCmd, { cwd: dir, stdio: "inherit" })
 
   console.log("\nFormatting the source files...\n")
-  execSync(formatCommand, { cwd: dir, stdio: "inherit" })
+  execSync(formatCmd, { cwd: dir, stdio: "inherit" })
 
   console.log(
     kleur.green("\nDone!\n\n") +
       `Go to the project's directory (cd ${dir}) and:\n` +
       "  - add your AoC session key to the .env file (optional)\n" +
       "  - tweak your template files in src/template (optional)\n" +
-      `  - start solving the first puzzle: ${dayCommand}\n\n` +
+      `  - start solving the first puzzle: ${startCmd} 1\n\n` +
       "🎄🎄 GOOD LUCK! 🎄🎄",
   )
 }
