@@ -113,9 +113,14 @@ const sendSolution = (
 ): Promise<Status> => {
   if (!canSubmit) {
     const now = Date.now()
-    const remainingSec = delayAmount - (now - delayStart)
-    console.log(kleur.red(`You have to wait: ${msToReadable(remainingSec)}`))
-    return Promise.resolve(Status["ERROR"])
+    const remainingMs = delayAmount - (now - delayStart)
+
+    if (remainingMs <= 0) {
+      canSubmit = true
+    } else {
+      console.log(kleur.red(`You have to wait: ${msToReadable(remainingMs)}`))
+      return Promise.resolve(Status["ERROR"])
+    }
   }
 
   return fetch(`https://adventofcode.com/${year}/day/${day}/answer`, {

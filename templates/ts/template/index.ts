@@ -6,12 +6,14 @@ const solution1 = async (rawInput: string) => {
   const input = parseInput(rawInput)
 
   // Solution:
+  return
 }
 
 const solution2 = async (rawInput: string) => {
   const input = parseInput(rawInput)
 
   // Solution:
+  return
 }
 
 run({
@@ -29,4 +31,5 @@ run({
     ],
     solution: solution2,
   },
+  trimTestInputs: true,
 })

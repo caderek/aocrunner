@@ -17,19 +17,19 @@ type Solutions = {
     solution: Solution
     tests?: Tests
   }
-  rawTestInput?: boolean
+  trimTestInputs?: boolean
 }
 
 const runTests = async (
   tests: Tests,
   solution: Solution,
   part: number,
-  rawTestInput = false,
+  trimTestInputs = true,
 ) => {
   for (let i = 0; i < tests.length; i++) {
     const { input, expected } = tests[i]
 
-    const data = rawTestInput ? input : stripIndent(input)
+    const data = trimTestInputs ? stripIndent(input) : input
 
     const result = await solution(data)
 
@@ -37,10 +37,11 @@ const runTests = async (
       console.log(kleur.green(`Part ${part}, test ${i + 1} - passed`))
     } else {
       console.log(kleur.red(`Part ${part}, test ${i + 1} - failed`))
-      console.log(`Result:`)
+      console.log(`\nResult:`)
       console.dir(result)
-      console.log(`Expected:`)
+      console.log(`\nExpected:`)
       console.dir(expected)
+      console.log()
     }
   }
 }
@@ -65,11 +66,21 @@ const runAsync = async (
   const config = readConfig()
 
   if (solutions?.part1?.tests) {
-    await runTests(solutions.part1.tests, solutions.part1.solution, 1)
+    await runTests(
+      solutions.part1.tests,
+      solutions.part1.solution,
+      1,
+      solutions.trimTestInputs,
+    )
   }
 
   if (solutions?.part2?.tests) {
-    await runTests(solutions.part2.tests, solutions.part2.solution, 2)
+    await runTests(
+      solutions.part2.tests,
+      solutions.part2.solution,
+      2,
+      solutions.trimTestInputs,
+    )
   }
 
   const input = fs.readFileSync(inputFile).toString()
