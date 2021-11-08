@@ -17,12 +17,21 @@ type Solutions = {
     solution: Solution
     tests?: Tests
   }
+  rawTestInput?: boolean
 }
 
-const runTests = async (tests: Tests, solution: Solution, part: number) => {
+const runTests = async (
+  tests: Tests,
+  solution: Solution,
+  part: number,
+  rawTestInput = false,
+) => {
   for (let i = 0; i < tests.length; i++) {
     const { input, expected } = tests[i]
-    const result = await solution(input)
+
+    const data = rawTestInput ? input : stripIndent(input)
+
+    const result = await solution(data)
 
     if (result === expected) {
       console.log(kleur.green(`Part ${part}, test ${i + 1} - passed`))

@@ -6,10 +6,16 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const [command, ...args] = process.argv
-  .filter((arg) => !["npm", "pnpm", "yarn", "npx", "pnpx", "run"].includes(arg))
-  .slice(1)
-  .map((v) => v.trim())
+const commandPos = process.argv.findIndex((arg) =>
+  ["init", "day", "build"].includes(arg),
+)
+
+if (commandPos === -1) {
+  console.log("Command not supported")
+  process.exit(1)
+}
+
+const [command, ...args] = process.argv.slice(commandPos)
 
 switch (String(command || "").toLowerCase()) {
   case "init": {
@@ -26,6 +32,7 @@ switch (String(command || "").toLowerCase()) {
   }
   default: {
     console.log("Command not supported")
+    process.exit(1)
     break
   }
 }

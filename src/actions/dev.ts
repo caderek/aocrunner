@@ -8,7 +8,7 @@ import buildSource from "./processes/buildSource.js"
 import runSolution from "./processes/runSolution.js"
 import copy from "../io/copy.js"
 import { readConfig, saveConfig } from "../io/config.js"
-import { getInput, sendSolution } from "../io/api.js"
+import { getInput, sendSolution, Status } from "../io/api.js"
 
 import type { Config } from "../types/common"
 
@@ -18,18 +18,28 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
     part === 1 ? config.days[dayNum - 1].part1 : config.days[dayNum - 1].part2
 
   if (dayData.solved) {
-    console.log(`Already solved!`)
+    console.log(kleur.green(`Already solved!`))
     return true
+  } else if (dayData.attempts.includes(dayData.result)) {
+    console.log(kleur.yellow("You already tried this solution, skipping."))
+    return false
   } else if (dayData.result !== null) {
-    const accepted = await sendSolution(config.year, dayNum, 1, dayData.result)
+    const status = await sendSolution(config.year, dayNum, 1, dayData.result)
 
-    if (accepted) {
+    if (status === Status["SOLVED"]) {
       config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
       saveConfig(config)
       return true
     }
+
+    if (status === Status["WRONG"]) {
+      config.days[dayNum - 1][part === 1 ? "part1" : "part2"].attempts.push(
+        dayData.result,
+      )
+      saveConfig(config)
+    }
   } else {
-    console.log(`Solution is undefined, skipping.`)
+    console.log(kleur.yellow(`Solution is undefined, skipping.`))
   }
 
   return false
@@ -37,6 +47,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
 
 const dev = (dayRaw: string | undefined) => {
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
+  const config = readConfig()
 
   if (day === undefined) {
     console.log(kleur.red("No day specified."))
@@ -53,7 +64,11 @@ const dev = (dayRaw: string | undefined) => {
   const dayDir = `day${String(dayNum).padStart(2, "0")}`
   const fromDir = path.join("src", "template")
   const toDir = path.join("src", dayDir)
-  const indexFile = path.join("dist", dayDir, "index.js")
+  const indexFile = path.join(
+    config.language === "ts" ? "dist" : "src",
+    dayDir,
+    "index.js",
+  )
   const inputPath = path.join(toDir, "input.txt")
 
   if (!fs.existsSync(fromDir)) {
@@ -68,7 +83,9 @@ const dev = (dayRaw: string | undefined) => {
 
   const files = getAllFiles("src")
 
-  buildSource(files)
+  if (config.language === "ts") {
+    buildSource(files)
+  }
 
   const boldMagenta = kleur.bold().magenta
 
@@ -83,11 +100,15 @@ const dev = (dayRaw: string | undefined) => {
   chokidar
     .watch("src", { ignoreInitial: true })
     .on("add", (file) => {
-      buildSource(file)
+      if (config.language === "ts") {
+        buildSource(file)
+      }
       runSolution(dayNum, indexFile)
     })
     .on("change", (file) => {
-      buildSource(file)
+      if (config.language === "ts") {
+        buildSource(file)
+      }
       runSolution(dayNum, indexFile)
     })
 

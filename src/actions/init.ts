@@ -68,12 +68,27 @@ const init = async () => {
       ? "yarn format"
       : "pnpm format"
 
-  console.log("\nInstalling dependencies...\n")
+  const dayCommand =
+    setup.packageManager === "npm"
+      ? "npm run day 1"
+      : setup.packageManager === "yarn"
+      ? "yarn day 1"
+      : "pnpm day 1"
 
+  console.log("\nInstalling dependencies...\n")
   execSync(installCommand, { cwd: dir, stdio: "inherit" })
+
+  console.log("\nFormatting the source files...\n")
   execSync(formatCommand, { cwd: dir, stdio: "inherit" })
 
-  console.log(kleur.green("Done!"))
+  console.log(
+    kleur.green("\nDone!\n\n") +
+      `Go to the project's directory (cd ${dir}) and:\n` +
+      "  - add your AoC session key to the .env file (optional)\n" +
+      "  - tweak your template files in src/template (optional)\n" +
+      `  - start solving the first puzzle: ${dayCommand}\n\n` +
+      "🎄🎄 GOOD LUCK! 🎄🎄",
+  )
 }
 
 export default init
