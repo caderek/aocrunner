@@ -55,13 +55,15 @@ const init = async () => {
 
   fs.mkdirSync(srcDir, { recursive: true })
 
+  const config = runnerJSON(setup)
+
   save(dir, "package.json", packageJSON(setup))
   save(dir, ".prettierrc.json", prettierJSON(setup))
   save(dir, ".gitignore", gitignoreTXT(setup))
   save(dir, ".prettierignore", prettierignoreTXT(setup))
-  save(dir, ".aocrunner.json", runnerJSON(setup))
+  save(dir, ".aocrunner.json", config)
   save(dir, ".env", envTXT)
-  save(dir, "README.md", readmeMD(setup, startCmd, installCmd))
+  save(dir, "README.md", readmeMD(setup, startCmd, installCmd, config))
 
   if (setup.language === "ts") {
     save(dir, "tsconfig.json", tsconfigJSON(setup))

@@ -56,7 +56,7 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   console.log(`Part ${part} (in ${time}ms):`)
   console.dir(result)
 
-  return result
+  return { result, time: Number(time) }
 }
 
 const runAsync = async (
@@ -86,23 +86,25 @@ const runAsync = async (
 
   const input = fs.readFileSync(inputFile).toString()
 
-  let result1
-  let result2
+  let output1
+  let output2
 
   if (solutions.part1) {
-    result1 = await runSolution(solutions.part1.solution, input, 1)
+    output1 = await runSolution(solutions.part1.solution, input, 1)
   }
 
   if (solutions.part2) {
-    result2 = await runSolution(solutions.part2.solution, input, 2)
+    output2 = await runSolution(solutions.part2.solution, input, 2)
   }
 
-  if (result1 !== undefined) {
-    config.days[day - 1].part1.result = result1
+  if (output1?.result !== undefined) {
+    config.days[day - 1].part1.result = output1.result
+    config.days[day - 1].part1.time = output1.time
   }
 
-  if (result2 !== undefined) {
-    config.days[day - 1].part2.result = result2
+  if (output2?.result !== undefined) {
+    config.days[day - 1].part2.result = output2.result
+    config.days[day - 1].part2.time = output2.time
   }
 
   saveConfig(config)

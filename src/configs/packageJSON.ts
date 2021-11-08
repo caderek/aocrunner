@@ -9,7 +9,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
     description: `Advent of Code ${year} - solutions`,
     type: "module",
     scripts: {
-      day: "aocrunner day",
+      start: "aocrunner day",
       ...build,
       format: "prettier -w src",
     },
@@ -18,7 +18,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
     license: "ISC",
     devDependencies: {
       "@types/node": "^16.11.6",
-      aocrunner: "^1.1.0",
+      aocrunner: "^1.2.0",
       prettier: "^2.4.1",
     },
     dependencies: {},

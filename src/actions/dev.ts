@@ -9,8 +9,28 @@ import runSolution from "./processes/runSolution.js"
 import copy from "../io/copy.js"
 import { readConfig, saveConfig } from "../io/config.js"
 import { getInput, sendSolution, Status } from "../io/api.js"
+import { saveReadme, readReadme } from "../io/readme.js"
+import { renderDayBadges, renderResults } from "../configs/readmeMD.js"
 
 import type { Config } from "../types/common"
+
+const updateReadme = () => {
+  const config = readConfig()
+  const badges = renderDayBadges(config)
+  const results = renderResults(config)
+
+  const readme = readReadme()
+    .replace(
+      /<!--SOLUTIONS-->(.|\n)+<!--\/SOLUTIONS-->/,
+      `<!--SOLUTIONS-->\n\n${badges}\n\n<!--/SOLUTIONS-->`,
+    )
+    .replace(
+      /<!--RESULTS-->(.|\n)+<!--\/RESULTS-->/,
+      `<!--RESULTS-->\n\n${results}\n\n<!--/RESULTS-->`,
+    )
+
+  saveReadme(readme)
+}
 
 const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   console.log(`\nPart ${part}:`)
@@ -29,6 +49,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
     if (status === Status["SOLVED"]) {
       config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
       saveConfig(config)
+      updateReadme()
       return true
     }
 
@@ -79,6 +100,7 @@ const dev = (dayRaw: string | undefined) => {
     console.log("Creating from template...")
     copy(fromDir, toDir)
     fs.writeFileSync(inputPath, "")
+    getInput(config.year, dayNum, inputPath)
   }
 
   const files = getAllFiles("src")

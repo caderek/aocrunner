@@ -10,11 +10,13 @@ const aocrunnerJSON = ({ year, language }: Setup): Config => {
         solved: false,
         result: null,
         attempts: [],
+        time: null,
       },
       part2: {
         solved: false,
         result: null,
         attempts: [],
+        time: null,
       },
     })),
   }
