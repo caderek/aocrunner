@@ -123,30 +123,28 @@ const dev = (dayRaw: string | undefined) => {
 
   runSolution(dayNum, indexFile)
 
+  const reload = (file: string) => {
+    if (![".js", ".ts", ".mjs"].includes(path.parse(file).ext)) {
+      return
+    }
+
+    if (config.language === "ts") {
+      buildSource(file)
+    }
+
+    runSolution(dayNum, indexFile)
+
+    console.log(stripIndent`
+        Type ${boldMagenta("send")}  or ${boldMagenta(
+      "s",
+    )} - to send the solution
+      `)
+  }
+
   chokidar
     .watch("src", { ignoreInitial: true })
-    .on("add", (file) => {
-      if (config.language === "ts") {
-        buildSource(file)
-      }
-      runSolution(dayNum, indexFile)
-      console.log(stripIndent`
-        Type ${boldMagenta("send")}  or ${boldMagenta(
-        "s",
-      )} - to send the solution
-      `)
-    })
-    .on("change", (file) => {
-      if (config.language === "ts") {
-        buildSource(file)
-      }
-      runSolution(dayNum, indexFile)
-      console.log(stripIndent`
-        Type ${boldMagenta("send")}  or ${boldMagenta(
-        "s",
-      )} - to send the solution
-      `)
-    })
+    .on("add", reload)
+    .on("change", reload)
 
   process.stdin.on("data", async (chunk) => {
     const data = chunk.toString()
