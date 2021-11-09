@@ -7,6 +7,7 @@ const getAllFiles = (location: string): string[] => {
   const files = entities
     .filter((entity) => entity.isFile())
     .map((entity) => path.join(location, entity.name))
+    .filter((file) => [".ts", ".js", ".mjs"].includes(path.parse(file).ext))
 
   const dirs = entities
     .filter((entity) => entity.isDirectory())

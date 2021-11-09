@@ -16,7 +16,7 @@ app
         res.send("<main>That's not the right answer</main>")
         break
       default:
-        res.send("<main>Ooops</main>")
+        res.send("<main>Oops</main>")
     }
   })
   .get("*", (req, res) => {
