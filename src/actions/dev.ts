@@ -101,8 +101,12 @@ const dev = (dayRaw: string | undefined) => {
   if (!fs.existsSync(toDir)) {
     console.log("Creating from template...")
     copy(fromDir, toDir)
+
     fs.writeFileSync(inputPath, "")
-    fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum))
+
+    if (!fs.existsSync(dayReadmePath)) {
+      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum))
+    }
   }
 
   getInput(config.year, dayNum, inputPath)
