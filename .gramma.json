@@ -1,7 +1,9 @@
 {
   "api_url": "https://api.languagetool.org/v2/check",
   "api_key": "",
-  "dictionary": [],
+  "dictionary": [
+    "json"
+  ],
   "language": "en-US",
   "rules": {
     "casing": true,

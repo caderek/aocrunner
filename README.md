@@ -13,7 +13,7 @@ This repo contains the utility library to create and run [Advent of Code](https:
 
 ## Installation
 
-To create the AoC solutions project run:
+To create the AoC solutions project run (requires Node 16+):
 
 ```
 npx aocrunner init

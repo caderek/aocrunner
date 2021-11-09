@@ -1,6 +1,7 @@
 {
   "name": "aocrunner",
-  "version": "1.3.0",
+  "version": "1.3.1",
+  "repository": "https://github.com/caderek/aocrunner",
   "description": "Advent of Code runner",
   "main": "lib/index.js",
   "bin": "lib/cli.js",
@@ -11,8 +12,14 @@
     "format": "prettier -w src",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "aoc",
+    "advent of code",
+    "runner",
+    "template",
+    "advent"
+  ],
+  "author": "Maciej Caderek",
   "license": "ISC",
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
