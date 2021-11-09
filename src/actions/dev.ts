@@ -100,8 +100,9 @@ const dev = (dayRaw: string | undefined) => {
     console.log("Creating from template...")
     copy(fromDir, toDir)
     fs.writeFileSync(inputPath, "")
-    getInput(config.year, dayNum, inputPath)
   }
+
+  getInput(config.year, dayNum, inputPath)
 
   const files = getAllFiles("src")
 
