@@ -1,5 +1,5 @@
 import type { Setup, Config } from "../types/common"
-import { stripIndent } from "common-tags"
+import { stripIndents } from "common-tags"
 
 const renderDayBadges = (config: Config) => {
   return config.days
@@ -32,20 +32,24 @@ const renderResults = (config: Config) => {
     .map(({ part1, part2 }, index) => {
       const day = String(index + 1).padStart(2, "0")
 
+      let timeBoth = 0
+
       if (part1.solved) {
         totalStars++
         totalTime += part1.time ?? 0
+        timeBoth += part1.time ?? 0
       }
       if (part2.solved) {
         totalStars++
         totalTime += part2.time ?? 0
+        timeBoth += part2.time ?? 0
       }
 
       if (day === "25" && part1.solved) {
         totalStars++
       }
 
-      return stripIndent`
+      return stripIndents`
       \`\`\`
       Day ${day}
       Time part 1: ${
@@ -54,12 +58,13 @@ const renderResults = (config: Config) => {
       Time part 2: ${
         part2.time !== null && part2.solved ? part2.time + "ms" : "-"
       }
+      Both parts: ${timeBoth !== 0 ? timeBoth + "ms" : "-"}
       \`\`\`
     `
     })
     .join("\n\n")
 
-  const summary = `
+  const summary = stripIndents`
     \`\`\`
     Total stars: ${totalStars}/50
     Total time: ${totalTime}ms
@@ -80,7 +85,7 @@ const readmeMD = (
   const dayBadges = renderDayBadges(config)
   const results = renderResults(config)
 
-  return stripIndent`
+  return stripIndents`
     <!-- Entries between SOLUTIONS and RESULTS tags are auto-generated -->
 
     [![AoC](https://badgen.net/badge/AoC/${year}/blue)](https://adventofcode.com/${year})

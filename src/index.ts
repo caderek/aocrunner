@@ -88,24 +88,31 @@ const runAsync = async (
 
   let output1
   let output2
+  let totalTime = 0
 
   if (solutions.part1) {
     output1 = await runSolution(solutions.part1.solution, input, 1)
+    totalTime += output1.time
   }
 
   if (solutions.part2) {
     output2 = await runSolution(solutions.part2.solution, input, 2)
+    totalTime += output2.time
   }
 
-  if (output1?.result !== undefined) {
-    config.days[day - 1].part1.result = output1.result
-    config.days[day - 1].part1.time = output1.time
-  }
+  console.log(`Total time: ${totalTime}ms`)
 
-  if (output2?.result !== undefined) {
-    config.days[day - 1].part2.result = output2.result
-    config.days[day - 1].part2.time = output2.time
-  }
+  config.days[day - 1].part1.result =
+    output1?.result === undefined ? null : output1.result
+
+  config.days[day - 1].part1.time =
+    output1?.result === undefined ? null : output1.time
+
+  config.days[day - 1].part2.result =
+    output2?.result === undefined ? null : output2.result
+
+  config.days[day - 1].part2.time =
+    output2?.result === undefined ? null : output2.time
 
   saveConfig(config)
 }
