@@ -100,7 +100,7 @@ const runAsync = async (
     totalTime += output2.time
   }
 
-  console.log(`Total time: ${totalTime}ms`)
+  console.log(`Total time: ${totalTime.toFixed(2)}ms`)
 
   config.days[day - 1].part1.result =
     output1?.result === undefined ? null : output1.result

@@ -20,13 +20,11 @@ run({
   part1: {
     tests: [
       // { input: ``, expected: "" },
-      // { input: ``, expected: "" },
     ],
     solution: solution1,
   },
   part2: {
     tests: [
-      // { input: ``, expected: "" },
       // { input: ``, expected: "" },
     ],
     solution: solution2,
