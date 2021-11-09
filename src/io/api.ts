@@ -3,6 +3,8 @@ import { JSDOM } from "jsdom"
 import { writeFileSync, existsSync, statSync } from "fs"
 import kleur from "kleur"
 
+const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
+
 const strToNum = (time: string) => {
   const entries: { [key: string]: number } = {
     one: 1,
@@ -86,7 +88,7 @@ const getInput = async (year: number, day: number, path: string) => {
     return
   }
 
-  fetch(`https://adventofcode.com/${year}/day/${day}/input`, {
+  fetch(`${API_URL}/${year}/day/${day}/input`, {
     headers: {
       cookie: `session=${process.env.AOC_SESSION_KEY}`,
     },
@@ -123,7 +125,7 @@ const sendSolution = (
     }
   }
 
-  return fetch(`https://adventofcode.com/${year}/day/${day}/answer`, {
+  return fetch(`${API_URL}/${year}/day/${day}/answer`, {
     headers: {
       cookie: `session=${process.env.AOC_SESSION_KEY}`,
       "content-type": "application/x-www-form-urlencoded",
