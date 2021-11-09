@@ -11,6 +11,7 @@ import { readConfig, saveConfig } from "../io/config.js"
 import { getInput, sendSolution, Status } from "../io/api.js"
 import { saveReadme, readReadme } from "../io/readme.js"
 import { renderDayBadges, renderResults } from "../configs/readmeMD.js"
+import readmeDayMD from "../configs/readmeDayMD.js"
 
 import type { Config } from "../types/common"
 
@@ -91,6 +92,7 @@ const dev = (dayRaw: string | undefined) => {
     "index.js",
   )
   const inputPath = path.join(toDir, "input.txt")
+  const dayReadmePath = path.join(toDir, "README.md")
 
   if (!fs.existsSync(fromDir)) {
     console.log(kleur.red("Template folder does not exist!"))
@@ -100,6 +102,7 @@ const dev = (dayRaw: string | undefined) => {
     console.log("Creating from template...")
     copy(fromDir, toDir)
     fs.writeFileSync(inputPath, "")
+    fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum))
   }
 
   getInput(config.year, dayNum, inputPath)

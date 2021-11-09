@@ -3,8 +3,6 @@ import { JSDOM } from "jsdom"
 import { writeFileSync, existsSync, statSync } from "fs"
 import kleur from "kleur"
 
-const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
-
 const strToNum = (time: string) => {
   const entries: { [key: string]: number } = {
     one: 1,
@@ -81,6 +79,8 @@ const handleErrors = (e: Error) => {
 }
 
 const getInput = async (year: number, day: number, path: string) => {
+  const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
+
   if (existsSync(path) && statSync(path).size > 0) {
     console.log(
       kleur.yellow(`INPUT FOR AOC ${year} DAY ${day} ALREADY FETCHED`),
@@ -113,6 +113,8 @@ const sendSolution = (
   part: 1 | 2,
   solution: number | string,
 ): Promise<Status> => {
+  const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
+
   if (!canSubmit) {
     const now = Date.now()
     const remainingMs = delayAmount - (now - delayStart)

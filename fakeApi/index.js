@@ -8,16 +8,19 @@ app
   .post("*", (req, res) => {
     const data = req.body
 
-    console.log({ data })
-
-    switch (data) {
+    switch (data.answer) {
       case "RIGHT":
-        res.send("That's the right answer")
+        res.send("<main>That's the right answer</main>")
         break
       case "WRONG":
-        res.send("That's not the right answer")
+        res.send("<main>That's not the right answer</main>")
         break
+      default:
+        res.send("<main>Ooops</main>")
     }
+  })
+  .get("*", (req, res) => {
+    res.send("1 2 3 4 5")
   })
   .listen(PORT, () => {
     console.log(`Listening on: http://localhost:${PORT}`)
