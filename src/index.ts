@@ -44,7 +44,6 @@ const runTests = async (
       console.log()
     }
   }
-  console.log()
 }
 
 const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
@@ -53,7 +52,7 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   const t1 = process.hrtime.bigint()
   const time = (Number(t1 - t0) / 1e6).toFixed(2)
 
-  console.log(`Part ${part} (in ${time}ms):`)
+  console.log(`\nPart ${part} (in ${time}ms):`)
   console.dir(result)
 
   return { result, time: Number(time) }
@@ -100,7 +99,7 @@ const runAsync = async (
     totalTime += output2.time
   }
 
-  console.log(`Total time: ${totalTime.toFixed(2)}ms`)
+  console.log(`\nTotal time: ${totalTime.toFixed(2)}ms`)
 
   config.days[day - 1].part1.result =
     output1?.result === undefined ? null : output1.result

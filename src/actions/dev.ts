@@ -127,12 +127,22 @@ const dev = (dayRaw: string | undefined) => {
         buildSource(file)
       }
       runSolution(dayNum, indexFile)
+      console.log(stripIndent`
+        Type ${boldMagenta("send")}  or ${boldMagenta(
+        "s",
+      )} - to send the solution
+      `)
     })
     .on("change", (file) => {
       if (config.language === "ts") {
         buildSource(file)
       }
       runSolution(dayNum, indexFile)
+      console.log(stripIndent`
+        Type ${boldMagenta("send")}  or ${boldMagenta(
+        "s",
+      )} - to send the solution
+      `)
     })
 
   process.stdin.on("data", async (chunk) => {
