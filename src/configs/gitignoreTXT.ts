@@ -6,6 +6,7 @@ const gitignoreTXT = ({ language }: Setup) => {
     node_modules
     *.temp.*
     */**/*.temp.*
+    */**/input.txt
     *.log
     */**/*.log
     .idea
