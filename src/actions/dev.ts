@@ -174,7 +174,6 @@ const dev = (dayRaw: string | undefined) => {
     console.clear()
 
     if (config.language === "ts") {
-      console.log("Transpiling...\n")
       buildSource(file)
     }
 

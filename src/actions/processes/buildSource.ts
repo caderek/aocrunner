@@ -7,6 +7,8 @@ const buildSource = (input: string | string[], sourcemap: boolean = true) => {
     ? "dist"
     : path.parse(input).dir.replace(/^src/, "dist")
 
+  console.log("Transpiling...\n")
+
   spawnSync(
     "npx",
     [
