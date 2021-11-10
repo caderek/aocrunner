@@ -5,8 +5,8 @@ import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
 import { saveConfig, readConfig } from "./io/config.js"
 
-type Tests = { input: string; expected: any }[]
-type Solution = (input: string) => any
+type Tests = { input: string; expected: string | number | bigint | void }[]
+type Solution = (input: string) => string | number | bigint | void
 
 type Solutions = {
   part1?: {
@@ -51,6 +51,15 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   const result = await solution(input)
   const t1 = process.hrtime.bigint()
   const time = (Number(t1 - t0) / 1e6).toFixed(2)
+
+  if (!["string", "number", "bigint", "undefined"].includes(typeof result)) {
+    console.log(
+      kleur.yellow(
+        `Warning - the result type of part ${part} should be a string, a number or a bigint, got:`,
+      ),
+      kleur.red(typeof result),
+    )
+  }
 
   console.log(`\nPart ${part} (in ${time}ms):`)
   console.dir(result)
@@ -102,13 +111,13 @@ const runAsync = async (
   console.log(`\nTotal time: ${totalTime.toFixed(2)}ms`)
 
   config.days[day - 1].part1.result =
-    output1?.result === undefined ? null : output1.result
+    output1?.result === undefined ? null : String(output1.result)
 
   config.days[day - 1].part1.time =
     output1?.result === undefined ? null : output1.time
 
   config.days[day - 1].part2.result =
-    output2?.result === undefined ? null : output2.result
+    output2?.result === undefined ? null : String(output2.result)
 
   config.days[day - 1].part2.time =
     output2?.result === undefined ? null : output2.time

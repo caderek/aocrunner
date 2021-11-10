@@ -12,8 +12,21 @@ import { getInput, sendSolution, Status } from "../io/api.js"
 import { saveReadme, readReadme } from "../io/readme.js"
 import { renderDayBadges, renderResults } from "../configs/readmeMD.js"
 import readmeDayMD from "../configs/readmeDayMD.js"
+import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
+import commandPrompt from "../prompts/commandPrompt.js"
 
 import type { Config } from "../types/common"
+
+const boldMagenta = kleur.bold().magenta
+
+const showInfo = () => {
+  console.log()
+  console.log(stripIndent`
+    Type ${boldMagenta("fetch")} or ${boldMagenta("f")} - to fetch the input
+    Type ${boldMagenta("send")}  or ${boldMagenta("s")} - to send the solutions
+  `)
+  console.log()
+}
 
 const updateReadme = () => {
   const config = readConfig()
@@ -41,27 +54,61 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   if (dayData.solved) {
     console.log(kleur.green(`Already solved!`))
     return true
-  } else if (dayData.attempts.includes(dayData.result)) {
+  }
+
+  if (dayData.attempts.includes(dayData.result)) {
     console.log(kleur.yellow("You already tried this solution, skipping."))
     return false
-  } else if (dayData.result !== null) {
-    const status = await sendSolution(config.year, dayNum, part, dayData.result)
+  }
 
-    if (status === Status["SOLVED"]) {
-      config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
-      saveConfig(config)
-      updateReadme()
-      return true
-    }
-
-    if (status === Status["WRONG"]) {
-      config.days[dayNum - 1][part === 1 ? "part1" : "part2"].attempts.push(
-        dayData.result,
-      )
-      saveConfig(config)
-    }
-  } else {
+  if (dayData.result === null) {
     console.log(kleur.yellow(`Solution is undefined, skipping.`))
+    return false
+  }
+
+  if (/\n/.test(dayData.result)) {
+    console.log(
+      kleur.yellow(stripIndent`
+      Solution to part ${part} is a multiline string,
+      and should probably be interpreted before sending.
+    `),
+    )
+    console.log()
+
+    const { choice, replacement } = await asciiPrompt(part)
+
+    switch (choice) {
+      case AsciiOptions.INTERPRETED:
+        if (replacement !== undefined && replacement !== "") {
+          dayData.result = replacement
+        } else {
+          console.log(kleur.yellow(`Solution is undefined, skipping.`))
+          return false
+        }
+        break
+      case AsciiOptions.AS_IS:
+        break
+      case AsciiOptions.CANCEL: {
+        console.log(kleur.yellow(`Skipping.`))
+        return false
+      }
+    }
+  }
+
+  const status = await sendSolution(config.year, dayNum, part, dayData.result)
+
+  if (status === Status["SOLVED"]) {
+    config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
+    saveConfig(config)
+    updateReadme()
+    return true
+  }
+
+  if (status === Status["WRONG"]) {
+    config.days[dayNum - 1][part === 1 ? "part1" : "part2"].attempts.push(
+      dayData.result,
+    )
+    saveConfig(config)
   }
 
   return false
@@ -117,14 +164,6 @@ const dev = (dayRaw: string | undefined) => {
     buildSource(files)
   }
 
-  const boldMagenta = kleur.bold().magenta
-
-  console.log("")
-  console.log(stripIndent`
-    Type ${boldMagenta("fetch")} or ${boldMagenta("f")} - to fetch the input
-    Type ${boldMagenta("send")}  or ${boldMagenta("s")} - to send the solution
-  `)
-
   runSolution(dayNum, indexFile)
 
   const reload = (file: string) => {
@@ -132,17 +171,17 @@ const dev = (dayRaw: string | undefined) => {
       return
     }
 
+    console.clear()
+
     if (config.language === "ts") {
       buildSource(file)
     }
 
     runSolution(dayNum, indexFile)
 
-    console.log(stripIndent`
-        Type ${boldMagenta("send")}  or ${boldMagenta(
-      "s",
-    )} - to send the solution
-      `)
+    showInfo()
+
+    process.stdout.write(kleur.cyan("?") + kleur.gray("  › "))
   }
 
   chokidar
@@ -150,20 +189,38 @@ const dev = (dayRaw: string | undefined) => {
     .on("add", reload)
     .on("change", reload)
 
-  process.stdin.on("data", async (chunk) => {
-    const data = chunk.toString()
+  const listenToInput = async () => {
+    showInfo()
+
+    const { command } = await commandPrompt()
+
     const config = readConfig()
 
-    if (/f(etch){0,1}\n/.test(data)) {
-      getInput(config.year, dayNum, inputPath)
-    } else if (/s(end){0,1}\n/.test(data)) {
-      const solved = await send(config, dayNum, 1)
+    switch (command.toLowerCase()) {
+      case "fetch":
+      case "f":
+        getInput(config.year, dayNum, inputPath)
+        break
+      case "send":
+      case "s":
+        const solved = await send(config, dayNum, 1)
 
-      if (solved) {
-        await send(config, dayNum, 2)
-      }
+        if (solved) {
+          await send(config, dayNum, 2)
+        }
+        break
+      case "clear":
+      case "c":
+        console.clear()
+        break
+      default:
+        console.log("Command not supported")
+        break
     }
-  })
+    listenToInput()
+  }
+
+  listenToInput()
 }
 
 export default dev
