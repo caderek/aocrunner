@@ -7,7 +7,7 @@ const tsconfigJSON = ({ strict }: Setup) => {
       module: "es2020",
       removeComments: true,
       declaration: true,
-      outDir: "./lib",
+      outDir: "./dist",
       preserveConstEnums: true,
       strict,
       allowSyntheticDefaultImports: true,

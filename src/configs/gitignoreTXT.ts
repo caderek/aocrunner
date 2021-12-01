@@ -12,7 +12,7 @@ const gitignoreTXT = ({ language }: Setup) => {
     .idea
     .vscode
     .env
-    ${language === "ts" ? "lib" : ""}
+    ${language === "ts" ? "dist" : ""}
   `
 }
 
