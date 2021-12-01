@@ -4,7 +4,7 @@ This repo contains the utility library to create and run [Advent of Code](https:
 
 ---
 
-![demo](aocrunner.gif)
+![demo](demo.gif)
 
 ## Overview
 
