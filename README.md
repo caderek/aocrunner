@@ -2,6 +2,10 @@
 
 This repo contains the utility library to create and run [Advent of Code](https://adventofcode.com/2021/about) solutions.
 
+---
+
+![demo](aocrunner.gif)
+
 ## Overview
 
 - Creates JavaScript or TypeScript repository for AoC solutions with a simple CLI menu.
