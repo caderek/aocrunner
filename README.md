@@ -48,7 +48,7 @@ pnpm start 1
 
 ## Join my leaderboard
 
-You can [join](https://adventofcode.com/2019/leaderboard/private) my private leaderboard fo JS/TS programmers:
+You can [join](https://adventofcode.com/2019/leaderboard/private) my private leaderboard for JS/TS programmers:
 
 Code:
 
