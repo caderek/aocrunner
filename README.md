@@ -58,7 +58,7 @@ Code:
 
 ## Note about automated requests
 
-Aoc Runner respects [the concerns of the AoC creator](https://www.reddit.com/r/adventofcode/comments/3v64sb/aoc_is_fragile_please_be_gentle/), and do not send unnecessary requests. In fact, it reduces the number of requests sent to the AoC server when compared to doing things manually:
+Aoc Runner respects [the concerns of the AoC creator](https://www.reddit.com/r/adventofcode/comments/3v64sb/aoc_is_fragile_please_be_gentle/), and does not send unnecessary requests. In fact, it reduces the number of requests sent to the AoC server when compared to doing things manually:
 
 - it downloads the input once (you can re-download it only by deleting the input file),
 - it keeps track of your failed and successful attempts and never sends the same solution twice,
