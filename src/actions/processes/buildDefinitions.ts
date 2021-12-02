@@ -6,6 +6,7 @@ const buildDefinitions = () => {
   const t0 = process.hrtime.bigint()
   spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", "dist"], {
     stdio: "inherit",
+    shell: true,
   })
   const t1 = process.hrtime.bigint()
   const time = (Number(t1 - t0) / 1e6).toFixed(0)

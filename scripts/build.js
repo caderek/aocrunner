@@ -40,7 +40,7 @@ const build = (input) => {
       "--platform=node",
       "--target=node16",
     ],
-    { stdio: "inherit" },
+    { stdio: "inherit", shell: true },
   )
 }
 
@@ -49,6 +49,7 @@ const buildDefinitions = () => {
   const t0 = process.hrtime.bigint()
   spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", "lib"], {
     stdio: "inherit",
+    shell: true,
   })
   const t1 = process.hrtime.bigint()
   const time = (Number(t1 - t0) / 1e6).toFixed(0)

@@ -20,7 +20,7 @@ const buildSource = (input: string | string[], sourcemap: boolean = true) => {
       "--target=node16",
       ...(sourcemap ? ["--sourcemap"] : []),
     ],
-    { stdio: "inherit" },
+    { stdio: "inherit", shell: true },
   )
 }
 
