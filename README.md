@@ -18,7 +18,7 @@ This repo contains the utility library to create and run [Advent of Code](https:
 
 ## Installation
 
-To create the AoC solutions project run (requires Node 16+):
+To create the AoC solutions project run (requires Node 16 LTS or higher: `v16.13.0+`):
 
 ```
 npx aocrunner init
@@ -48,7 +48,7 @@ pnpm start 1
 
 ## Join my leaderboard
 
-You can [join](https://adventofcode.com/2019/leaderboard/private) my private leaderboard fo JS/TS programmers:
+You can [join](https://adventofcode.com/2019/leaderboard/private) my private leaderboard for JS/TS programmers:
 
 Code:
 
