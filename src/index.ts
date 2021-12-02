@@ -127,7 +127,7 @@ const runAsync = async (
 }
 
 const run = (solutions: Solutions, inputFile?: string) => {
-  const prefixRegex = os.platform() === "win32" ? /^file:\\\\\\/ : /^file:\\\\/
+  const prefixRegex = os.platform() === "win32" ? /^file:\/\/\// : /^file:\/\//
   const callerFile = getCallerFile().replace(prefixRegex, "")
   const dir = path.parse(callerFile).dir.split(path.sep)
   const day = Number(
