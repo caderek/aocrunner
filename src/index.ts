@@ -1,4 +1,5 @@
 import fs from "fs"
+import os from "os"
 import path from "path"
 import kleur from "kleur"
 import getCallerFile from "get-caller-file"
@@ -126,7 +127,8 @@ const runAsync = async (
 }
 
 const run = (solutions: Solutions, inputFile?: string) => {
-  const callerFile = getCallerFile().replace(/(file:\\\\)|(file:\/\/)/, "")
+  const prefixRegex = os.platform() === "win32" ? /^file:\\\\\\/ : /^file:\\\\/
+  const callerFile = getCallerFile().replace(prefixRegex, "")
   const dir = path.parse(callerFile).dir.split(path.sep)
   const day = Number(
     [...dir]
