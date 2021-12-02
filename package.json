@@ -1,6 +1,6 @@
 {
   "name": "aocrunner",
-  "version": "1.4.8",
+  "version": "1.4.10",
   "repository": "https://github.com/caderek/aocrunner",
   "description": "Advent of Code runner",
   "main": "lib/index.js",

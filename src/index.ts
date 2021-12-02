@@ -129,22 +129,22 @@ const runAsync = async (
 const run = (solutions: Solutions, inputFile?: string) => {
   const prefixRegex = os.platform() === "win32" ? /^file:\/\/\// : /^file:\/\//
   const callerFile = getCallerFile().replace(prefixRegex, "")
-  const dir = path.parse(callerFile).dir.split(path.sep)
+  const dir = path.parse(callerFile).dir
+
   const day = Number(
-    [...dir]
+    dir
+      .split(path.sep)
       .reverse()
       .find((x) => /day\d\d/.test(x))
       ?.slice(-2),
   )
 
   if (inputFile === undefined) {
-    const lastDist = dir.lastIndexOf("dist")
+    const srcDir = dir
+      .replace(/\/dist\//g, "/src/")
+      .replace(/\\dist\\/g, "\\src\\")
 
-    if (lastDist !== -1) {
-      dir[lastDist] = "src"
-    }
-
-    inputFile = path.join(dir.join(path.sep), "input.txt")
+    inputFile = path.join(srcDir, "input.txt")
   }
 
   if (!fs.existsSync(inputFile)) {
