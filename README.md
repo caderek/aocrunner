@@ -137,7 +137,7 @@ bar
 baz
 ```
 
-With `trimTestInputs: false` we cannot have any indents (unless they are part of the input):
+With `trimTestInputs: false` we cannot have any indents (unless they are a part of the input):
 
 ```js
 /* Correct */
