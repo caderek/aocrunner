@@ -263,6 +263,33 @@ With `onlyTests` switch set to `true` your solutions won't be run on the real in
 
 Default value is set to `false`, so you can set `onlyTests: true` in your code (or even your template) and switch between modes just by commenting and uncommenting this line.
 
+Example:
+
+```js
+run({
+  part1: {
+    tests: [
+      {
+        input: `some test input`,
+        expected: "some result",
+      },
+    ],
+    solution: part1,
+  },
+  part2: {
+    tests: [
+      {
+        input: `some test input`,
+        expected: "some result",
+      },
+    ],
+    solution: part2,
+  },
+  trimTestInputs: true,
+  onlyTests: true, // <- Yay! Comment this line to quickly switch mode.
+})
+```
+
 ## License
 
 Project is under open, non-restrictive [ISC license](LICENSE.md).
