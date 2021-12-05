@@ -1,6 +1,6 @@
 {
   "name": "aocrunner",
-  "version": "1.4.11",
+  "version": "1.5.0",
   "repository": "https://github.com/caderek/aocrunner",
   "description": "Advent of Code runner",
   "main": "lib/index.js",
@@ -44,5 +44,8 @@
     "prompts": "^2.4.2",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">=16.13.0"
   }
 }

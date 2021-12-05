@@ -19,6 +19,7 @@ type Solutions = {
     tests?: Tests
   }
   trimTestInputs?: boolean
+  onlyTests?: boolean
 }
 
 const runTests = async (
@@ -91,6 +92,10 @@ const runAsync = async (
       2,
       solutions.trimTestInputs,
     )
+  }
+
+  if (solutions.onlyTests) {
+    return
   }
 
   const input = fs.readFileSync(inputFile).toString()
