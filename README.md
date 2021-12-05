@@ -93,6 +93,176 @@ import myLib from "../utils/myLib"
 import { myUtil } from "../utils"
 ```
 
+## Usage of the `run` function
+
+The `run` function takes care of reading the output and supplying it to the solution functions, executes tests and measures your code performance.
+
+It takes an object that describes your solutions, and optionally, as a second argument - custom path to the input file.
+
+The solution description have four keys (each is optional):
+
+```js
+{
+  part1: {/* tests and solution function for part one of the puzzle */},
+  part2: {/* tests and solution function for part two of the puzzle */},
+  trimTestInputs: true, // boolean switch for preparing test inputs
+  onlyTests: false, // boolean switch to run tests only - useful for debugging
+}
+```
+
+### `part1` and `part2`
+
+Both `part1` and `part2` keys accept an object in format:
+
+```js
+{
+  tests: [{ input: `some test input`, expected: "expected value"}], // optional
+  solution: part1, // required
+}
+```
+
+- `tests` accepts an array of tests (you can add as many as you want)
+
+- `solution` accepts a function that takes the raw input as an argument and returns the solution as `string` / `number` / `bigint` (return value will be converted to string before sending a solution)
+
+### `trimTestInputs`
+
+Usually, the test inputs will be some multiline strings, so we can provide them using [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#multi-line_strings). Be careful - any white spaces / indents within the template literal **are a part of the string**, so without `trimTestInputs: true` you have to format your test input accordingly.
+
+Let's say that we have this test input:
+
+```
+foo
+bar
+baz
+```
+
+With `trimTestInputs: false` we cannot have any indents (unless they are part of the input):
+
+```js
+/* Correct */
+run({
+  part1: {
+    tests: [
+      {
+        input: `foo
+bar
+baz`,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: false,
+})
+```
+
+```js
+/* Incorrect */
+run({
+  part1: {
+    tests: [
+      {
+        input: `foo
+          bar
+          baz`,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: false,
+})
+```
+
+```js
+/* Also incorrect */
+run({
+  part1: {
+    tests: [
+      {
+        input: `
+          foo
+          bar
+          baz
+        `,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: false,
+})
+```
+
+That looks ugly, that's where `trimTestInputs: true` come in handy - it will remove empty lines at the beginning and the end of the test input, and will remove **first level of indentation**.
+
+With `trimTestInputs: true`:
+
+```js
+/* Still correct */
+run({
+  part1: {
+    tests: [
+      {
+        input: `foo
+bar
+baz`,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: true,
+})
+```
+
+```js
+/* Incorrect - first line has no indentation */
+run({
+  part1: {
+    tests: [
+      {
+        input: `foo
+          bar
+          baz`,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: true,
+})
+```
+
+```js
+/* Now it works! All lines have the same level of indentation,
+ * so aocrunner will transform it into a correct input.
+ */
+run({
+  part1: {
+    tests: [
+      {
+        input: `
+          foo
+          bar
+          baz
+        `,
+        expected: "my-result",
+      },
+    ],
+    solution: part1,
+  },
+  trimTestInputs: true,
+})
+```
+
+### `onlyTests`
+
+With `onlyTests` switch set to `true` your solutions won't be run on the real input, only the test inputs. It can come in handy when you are using `console.log` to print intermediate values when solving the puzzle (real input can be really big).
+
+Default value is set to `false`, so you can set `onlyTests: true` in your code (or even your template) and switch between modes just by commenting and uncommenting this line.
+
 ## License
 
 Project is under open, non-restrictive [ISC license](LICENSE.md).
