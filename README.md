@@ -99,7 +99,7 @@ The `run` function takes care of reading the output and supplying it to the solu
 
 It takes an object that describes your solutions, and optionally, as a second argument - custom path to the input file.
 
-The solution description have four keys (each is optional):
+The solution description have four keys (each of them is optional):
 
 ```js
 {
