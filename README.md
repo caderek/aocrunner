@@ -103,8 +103,8 @@ The solution description have four keys (each of them is optional):
 
 ```js
 {
-  part1: {/* tests and solution function for part one of the puzzle */},
-  part2: {/* tests and solution function for part two of the puzzle */},
+  part1: {/* tests and the solution function for part one of the puzzle */},
+  part2: {/* tests and the solution function for part two of the puzzle */},
   trimTestInputs: true, // boolean switch for preparing test inputs
   onlyTests: false, // boolean switch to run tests only - useful for debugging
 }
