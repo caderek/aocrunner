@@ -1,5 +1,6 @@
 import type { Setup, Config } from "../types/common"
 import { stripIndents } from "common-tags"
+import toFixed from "../utils/toFixed.js"
 
 const renderDayBadges = (config: Config) => {
   return config.days
@@ -53,10 +54,10 @@ const renderResults = (config: Config) => {
       \`\`\`
       Day ${day}
       Time part 1: ${
-        part1.time !== null && part1.solved ? part1.time + "ms" : "-"
+        part1.time !== null && part1.solved ? toFixed(part1.time) + "ms" : "-"
       }
       Time part 2: ${
-        part2.time !== null && part2.solved ? part2.time + "ms" : "-"
+        part2.time !== null && part2.solved ? toFixed(part2.time) + "ms" : "-"
       }
       Both parts: ${timeBoth !== 0 ? timeBoth + "ms" : "-"}
       \`\`\`
@@ -67,7 +68,7 @@ const renderResults = (config: Config) => {
   const summary = stripIndents`
     \`\`\`
     Total stars: ${totalStars}/50
-    Total time: ${totalTime}ms
+    Total time: ${toFixed(totalTime)}ms
     \`\`\`
   `
 

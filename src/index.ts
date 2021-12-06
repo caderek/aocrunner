@@ -5,8 +5,14 @@ import kleur from "kleur"
 import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
 import { saveConfig, readConfig } from "./io/config.js"
+import toFixed from "./utils/toFixed.js"
 
-type Tests = { name?: string, input: string; expected: string | number | bigint | void }[]
+type Tests = {
+  name?: string
+  input: string
+  expected: string | number | bigint | void
+}[]
+
 type Solution = (input: string) => string | number | bigint | void
 
 type Solutions = {
@@ -35,7 +41,8 @@ const runTests = async (
 
     const result = await solution(data)
 
-    const testName = `Part ${part}, test ${i + 1}${name ? `, ${name}` : ''}`;
+    const testName = `Part ${part}, test ${i + 1}${name ? `, ${name}` : ""}`
+
     if (result === expected) {
       console.log(kleur.green(`${testName} - passed`))
     } else {
@@ -53,7 +60,7 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   const t0 = process.hrtime.bigint()
   const result = await solution(input)
   const t1 = process.hrtime.bigint()
-  const time = (Number(t1 - t0) / 1e6).toFixed(2)
+  const time = Number(t1 - t0) / 1e6
 
   if (!["string", "number", "bigint", "undefined"].includes(typeof result)) {
     console.log(
@@ -64,10 +71,10 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
     )
   }
 
-  console.log(`\nPart ${part} (in ${time}ms):`)
+  console.log(`\nPart ${part} (in ${toFixed(time)}ms):`)
   console.dir(result)
 
-  return { result, time: Number(time) }
+  return { result, time }
 }
 
 const runAsync = async (
@@ -115,7 +122,7 @@ const runAsync = async (
     totalTime += output2.time
   }
 
-  console.log(`\nTotal time: ${totalTime.toFixed(2)}ms`)
+  console.log(`\nTotal time: ${toFixed(totalTime)}ms`)
 
   config.days[day - 1].part1.result =
     output1?.result === undefined ? null : String(output1.result)

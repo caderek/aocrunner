@@ -121,9 +121,9 @@ Both `part1` and `part2` keys accept an object in format:
 }
 ```
 
-- `tests` accepts an array of tests (you can add as many as you want)
+- `tests` key accepts an array of tests (you can add as many as you want), each test takes `input` and `expected` result, you can also provide an optional `name` for each test that will be displayed when the tests are executed.
 
-- `solution` accepts a function that takes the raw input as an argument and returns the solution as `string` / `number` / `bigint` (return value will be converted to string before sending a solution)
+- `solution` key accepts a function that takes the raw input as an argument and returns the solution as `string` / `number` / `bigint` (return value will be converted to string before sending a solution)
 
 ### `trimTestInputs`
 
