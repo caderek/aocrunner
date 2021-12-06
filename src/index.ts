@@ -6,7 +6,7 @@ import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
 import { saveConfig, readConfig } from "./io/config.js"
 
-type Tests = { input: string; expected: string | number | bigint | void }[]
+type Tests = { name?: string, input: string; expected: string | number | bigint | void }[]
 type Solution = (input: string) => string | number | bigint | void
 
 type Solutions = {
@@ -29,16 +29,17 @@ const runTests = async (
   trimTestInputs = true,
 ) => {
   for (let i = 0; i < tests.length; i++) {
-    const { input, expected } = tests[i]
+    const { name, input, expected } = tests[i]
 
     const data = trimTestInputs ? stripIndent(input) : input
 
     const result = await solution(data)
 
+    const testName = `Part ${part}, test ${i + 1}${name ? `, ${name}` : ''}`;
     if (result === expected) {
-      console.log(kleur.green(`Part ${part}, test ${i + 1} - passed`))
+      console.log(kleur.green(`${testName} - passed`))
     } else {
-      console.log(kleur.red(`Part ${part}, test ${i + 1} - failed`))
+      console.log(kleur.red(`${testName} - failed`))
       console.log(`\nResult:`)
       console.dir(result)
       console.log(`\nExpected:`)
