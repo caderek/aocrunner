@@ -72,7 +72,12 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
   }
 
   console.log(`\nPart ${part} (in ${toFixed(time)}ms):`)
-  console.dir(result)
+
+  if (typeof result === "string" && /\n/.test(result)) {
+    console.log(result)
+  } else {
+    console.dir(result)
+  }
 
   return { result, time }
 }
