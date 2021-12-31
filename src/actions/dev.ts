@@ -114,7 +114,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   return false
 }
 
-const dev = (dayRaw: string | undefined) => {
+const dev = async (dayRaw: string | undefined) => {
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
   const config = readConfig()
 
@@ -164,9 +164,9 @@ const dev = (dayRaw: string | undefined) => {
     buildSource(files)
   }
 
-  runSolution(dayNum, indexFile)
+  await runSolution(dayNum, indexFile)
 
-  const reload = (file: string) => {
+  const reload = async (file: string) => {
     if (![".js", ".ts", ".mjs"].includes(path.parse(file).ext)) {
       return
     }
@@ -177,7 +177,7 @@ const dev = (dayRaw: string | undefined) => {
       buildSource(file)
     }
 
-    runSolution(dayNum, indexFile)
+    await runSolution(dayNum, indexFile)
 
     showInfo()
 
