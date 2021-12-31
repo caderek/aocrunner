@@ -16,8 +16,8 @@ const runSolution = async (day: number, path: string) => {
     process.on("SIGINT", stop)
 
     child.on("exit", (code) => {
-      resolve(code)
       process.off("SIGINT", stop)
+      resolve(code)
     })
   })
 }
