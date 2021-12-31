@@ -24,6 +24,7 @@ const showInfo = () => {
   console.log(stripIndent`
     Type ${boldMagenta("fetch")} or ${boldMagenta("f")} - to fetch the input
     Type ${boldMagenta("send")}  or ${boldMagenta("s")} - to send the solutions
+    Type ${boldMagenta("quit")}  or ${boldMagenta("q")} - to quit
   `)
   console.log()
 }
@@ -213,6 +214,9 @@ const dev = (dayRaw: string | undefined) => {
       case "c":
         console.clear()
         break
+      case "quit":
+      case "q":
+        process.exit(0)
       default:
         console.log("Command not supported")
         break
