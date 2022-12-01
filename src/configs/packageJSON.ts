@@ -1,5 +1,5 @@
 import type { Setup } from "../types/common"
-import version from "../version"
+import version from "../version.js"
 
 const packageJSON = ({ year, language, author }: Setup) => {
   const build = language === "ts" ? { build: "aocrunner build" } : {}
