@@ -12,6 +12,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
       start: "aocrunner day",
       ...build,
       format: "prettier -w src",
+      "update:readme": "aocrunner update:readme",
     },
     keywords: ["aoc"],
     author: author ?? "",
