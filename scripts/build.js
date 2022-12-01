@@ -6,6 +6,14 @@ import kleur from "kleur"
 
 const watch = process.argv[2] === "--watch"
 
+const createVersionFile = () => {
+  const packageInfo = JSON.parse(
+    fs.readFileSync("package.json", { encoding: "utf8" }),
+  )
+
+  fs.writeFileSync("src/version.ts", `export default "${packageInfo.version}"`)
+}
+
 const getAllFiles = (location) => {
   const entities = fs.readdirSync(location, { withFileTypes: true })
 
@@ -73,6 +81,7 @@ if (watch) {
     console.log("Building source files...")
   }
 
+  createVersionFile()
   build(files)
   buildDefinitions()
 }
