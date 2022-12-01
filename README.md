@@ -58,12 +58,14 @@ Code:
 
 ## Note about automated requests
 
-Aoc Runner respects [the concerns of the AoC creator](https://www.reddit.com/r/adventofcode/comments/3v64sb/aoc_is_fragile_please_be_gentle/), and does not send unnecessary requests. In fact, it reduces the number of requests sent to the AoC server when compared to doing things manually:
+AoC Runner respects [the concerns of the AoC creator](https://www.reddit.com/r/adventofcode/comments/3v64sb/aoc_is_fragile_please_be_gentle/), and does not send unnecessary requests. In fact, it reduces the number of requests sent to the AoC server when compared to doing things manually:
 
 - it downloads the input once (you can re-download it only by deleting the input file),
 - it keeps track of your failed and successful attempts and never sends the same solution twice,
 - it prevents you from sending empty solutions or solutions that are not strings/numbers,
 - when you send an incorrect solution, it locally keeps track of the remaining time before you can send another solution, so the server is not spammed with premature attempts.
+
+Starting from version 1.7.0 AoC Runner sets the correct request header as [requested](https://www.reddit.com/r/adventofcode/comments/z9dhtd/please_include_your_contact_info_in_the_useragent/) by AoC creator. If you use an older version, please upgrade.
 
 ## Note about ES Modules
 

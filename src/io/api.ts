@@ -3,6 +3,10 @@ import { JSDOM } from "jsdom"
 import { writeFileSync, existsSync, statSync } from "fs"
 import kleur from "kleur"
 
+const USER_AGENT_HEADER = {
+  "User-Agent": "github.com/caderek/aocrunner by maciej.caderek@gmail.com",
+}
+
 const strToNum = (time: string) => {
   const entries: { [key: string]: number } = {
     one: 1,
@@ -91,6 +95,7 @@ const getInput = async (year: number, day: number, path: string) => {
   fetch(`${API_URL}/${year}/day/${day}/input`, {
     headers: {
       cookie: `session=${process.env.AOC_SESSION_KEY}`,
+      ...USER_AGENT_HEADER,
     },
   })
     .then((res) => {
@@ -131,6 +136,7 @@ const sendSolution = (
     headers: {
       cookie: `session=${process.env.AOC_SESSION_KEY}`,
       "content-type": "application/x-www-form-urlencoded",
+      ...USER_AGENT_HEADER,
     },
     method: "POST",
     body: `level=${part}&answer=${solution}`,
