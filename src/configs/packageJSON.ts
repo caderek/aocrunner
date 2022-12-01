@@ -1,4 +1,5 @@
 import type { Setup } from "../types/common"
+import version from "../version"
 
 const packageJSON = ({ year, language, author }: Setup) => {
   const build = language === "ts" ? { build: "aocrunner build" } : {}
@@ -18,8 +19,8 @@ const packageJSON = ({ year, language, author }: Setup) => {
     license: "ISC",
     devDependencies: {
       "@types/node": "^16.11.6",
-      aocrunner: "^1.6.1",
-      prettier: "^2.4.1",
+      aocrunner: `^${version}`,
+      prettier: "^2.8.0",
     },
     dependencies: {},
     engines: {
