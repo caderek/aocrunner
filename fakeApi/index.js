@@ -6,6 +6,8 @@ const PORT = 1234
 app
   .use(express.urlencoded({ extended: true }))
   .post("*", (req, res) => {
+    console.log(req.headers)
+
     const data = req.body
 
     switch (data.answer) {
@@ -20,6 +22,7 @@ app
     }
   })
   .get("*", (req, res) => {
+    console.log(req.headers)
     res.send("1 2 3 4 5")
   })
   .listen(PORT, () => {

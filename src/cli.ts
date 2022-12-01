@@ -3,6 +3,7 @@ import init from "./actions/init.js"
 import dev from "./actions/dev.js"
 import build from "./actions/build.js"
 import dotenv from "dotenv"
+import version from "./version.js"
 
 dotenv.config()
 
@@ -18,6 +19,10 @@ if (commandPos === -1) {
 const [command, ...args] = process.argv.slice(commandPos)
 
 switch (String(command || "").toLowerCase()) {
+  case "-v": {
+    console.log(version)
+    break
+  }
   case "init": {
     init()
     break
@@ -33,6 +38,5 @@ switch (String(command || "").toLowerCase()) {
   default: {
     console.log("Command not supported")
     process.exit(1)
-    break
   }
 }
