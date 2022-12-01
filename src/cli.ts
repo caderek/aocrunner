@@ -2,12 +2,13 @@
 import init from "./actions/init.js"
 import dev from "./actions/dev.js"
 import build from "./actions/build.js"
+import updateReadme from "./actions/updateReadMe.js"
 import dotenv from "dotenv"
 
 dotenv.config()
 
 const commandPos = process.argv.findIndex((arg) =>
-  ["init", "day", "build"].includes(arg),
+  ["init", "day", "build", "update:readme"].includes(arg),
 )
 
 if (commandPos === -1) {
@@ -29,6 +30,10 @@ switch (String(command || "").toLowerCase()) {
   case "build": {
     build()
     break
+  }
+  case "update:readme": {
+    updateReadme()
+    break;
   }
   default: {
     console.log("Command not supported")
