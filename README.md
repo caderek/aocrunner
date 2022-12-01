@@ -30,7 +30,7 @@ It will guide you through the configuration with simple CLI menu.
 
 - Go to the projects directory.
 - initialize your version control system (ex: `git init`) _(optional)_
-- add your AoC session key to the `.env` file (you can find it in cookie file when you sign in at [adventofcode.com](https://adventofcode.com/)) _(optional)_
+- add your AoC session key `AOC_SESSION_KEY` to the `.env` file (you can find it in cookie file when you sign in at [adventofcode.com](https://adventofcode.com/)) _(optional)_
 - customize your template folder `src/template` _(optional)_
 - start solving the puzzles by running `start <day_number>` command with your package manager, for example:
 
