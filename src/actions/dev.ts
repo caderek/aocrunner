@@ -10,12 +10,12 @@ import getLatestVersion from "./processes/getLatestVersion.js"
 import copy from "../io/copy.js"
 import { readConfig, saveConfig } from "../io/config.js"
 import { getInput, sendSolution, Status } from "../io/api.js"
-import { saveReadme, readReadme } from "../io/readme.js"
-import { renderDayBadges, renderResults } from "../configs/readmeMD.js"
+
 import readmeDayMD from "../configs/readmeDayMD.js"
 import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
 import commandPrompt from "../prompts/commandPrompt.js"
 import type { Config } from "../types/common"
+import updateReadme from "./updateReadMe.js"
 import version from "../version.js"
 
 let latestVersion: string | null = null
@@ -67,23 +67,7 @@ const showInfo = () => {
   console.log()
 }
 
-const updateReadme = () => {
-  const config = readConfig()
-  const badges = renderDayBadges(config)
-  const results = renderResults(config)
 
-  const readme = readReadme()
-    .replace(
-      /<!--SOLUTIONS-->(.|\n)+<!--\/SOLUTIONS-->/,
-      `<!--SOLUTIONS-->\n\n${badges}\n\n<!--/SOLUTIONS-->`,
-    )
-    .replace(
-      /<!--RESULTS-->(.|\n)+<!--\/RESULTS-->/,
-      `<!--RESULTS-->\n\n${results}\n\n<!--/RESULTS-->`,
-    )
-
-  saveReadme(readme)
-}
 
 const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   console.log(`\nPart ${part}:`)
