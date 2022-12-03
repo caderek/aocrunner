@@ -11,7 +11,10 @@ const createVersionFile = () => {
     fs.readFileSync("package.json", { encoding: "utf8" }),
   )
 
-  fs.writeFileSync("src/version.ts", `export default "${packageInfo.version}"`)
+  fs.writeFileSync(
+    "src/version.ts",
+    `/* This file is auto-generated - do not modify */\nexport default "${packageInfo.version}"`,
+  )
 }
 
 const getAllFiles = (location) => {
