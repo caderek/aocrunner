@@ -9,11 +9,11 @@ export const updateReadme = () => {
 
   const readme = readReadme()
     .replace(
-      /<!--SOLUTIONS-->(.|\n)+<!--\/SOLUTIONS-->/,
+      /<!--SOLUTIONS-->(.|\n|\r)+<!--\/SOLUTIONS-->/,
       `<!--SOLUTIONS-->\n\n${badges}\n\n<!--/SOLUTIONS-->`,
     )
     .replace(
-      /<!--RESULTS-->(.|\n)+<!--\/RESULTS-->/,
+      /<!--RESULTS-->(.|\n|\r)+<!--\/RESULTS-->/,
       `<!--RESULTS-->\n\n${results}\n\n<!--/RESULTS-->`,
     )
 
