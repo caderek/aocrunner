@@ -1,6 +1,6 @@
 # AoC Runner
 
-This repo contains the utility library to create and run [Advent of Code](https://adventofcode.com/2021/about) solutions.
+This repo contains the utility library to create and run [Advent of Code](https://adventofcode.com/2022/about) solutions.
 
 ---
 
@@ -48,7 +48,7 @@ pnpm start 1
 
 ## Join my leaderboard
 
-You can [join](https://adventofcode.com/2019/leaderboard/private) my private leaderboard for JS/TS programmers:
+You can [join](https://adventofcode.com/2022/leaderboard/private) my private leaderboard for JS/TS programmers:
 
 Code:
 
