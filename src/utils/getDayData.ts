@@ -4,7 +4,7 @@ import os from "os"
 const getFilesTrace = () => {
   const regex =
     os.platform() === "win32"
-      ? /[A-Z]:\\.*\.(m?)js/gm
+      ? /[A-Z]:(\\|\/).*\.(m?)js/gm
       : /(?<=file:\/\/).*\.(m?)js/gm
 
   return new Error().stack?.match(regex)
