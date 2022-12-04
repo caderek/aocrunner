@@ -12,7 +12,7 @@ const getFilesTrace = () => {
 
 const getDayData = () => {
   const dirs = getFilesTrace()?.map((file) =>
-    path.parse(file).dir.split(path.sep),
+    path.parse(file).dir.split(/\\|\//),
   )
 
   const dayDir = dirs?.find((chunks) =>
