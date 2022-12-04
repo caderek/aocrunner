@@ -1,9 +1,13 @@
 import path from "path"
+import os from "os"
 
 const getFilesTrace = () => {
-  return new Error().stack?.match(
-    /((?<=file:\/\/).*\.(m?)js)|([A-Z]:\\.*\.(m?)js)/gm,
-  )
+  const regex =
+    os.platform() === "win32"
+      ? /[A-Z]:\\.*\.(m?)js/gm
+      : /(?<=file:\/\/).*\.(m?)js/gm
+
+  return new Error().stack?.match(regex)
 }
 
 const getDayData = () => {
