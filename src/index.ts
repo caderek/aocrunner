@@ -1,11 +1,9 @@
 import fs from "fs"
-import os from "os"
-import path from "path"
 import kleur from "kleur"
-import getCallerFile from "get-caller-file"
 import { stripIndent } from "common-tags"
 import { saveConfig, readConfig } from "./io/config.js"
 import toFixed from "./utils/toFixed.js"
+import getDayData from "./utils/getDayData.js"
 
 type Tests = {
   name?: string
@@ -144,25 +142,42 @@ const runAsync = async (
   saveConfig(config)
 }
 
-const run = (solutions: Solutions, inputFile?: string) => {
-  const prefixRegex = os.platform() === "win32" ? /^file:\/\/\// : /^file:\/\//
-  const callerFile = getCallerFile().replace(prefixRegex, "")
-  const dir = path.parse(callerFile).dir
+const run = (solutions: Solutions, customInputFile?: string) => {
+  let day = null
+  let inputFile = null
 
-  const day = Number(
-    dir
-      .split(path.sep)
-      .reverse()
-      .find((x) => /day\d\d/.test(x))
-      ?.slice(-2),
-  )
+  if (customInputFile) {
+    const dayName = (customInputFile.match(/day\d\d/) || [])[0]
+    inputFile = customInputFile
+    day = dayName ? Number(dayName.slice(-2)) : null
+  } else {
+    const dayData = getDayData()
+    day = dayData.day
+    inputFile = dayData.inputFile
+  }
 
-  if (inputFile === undefined) {
-    const srcDir = dir
-      .replace(/\/dist\//g, "/src/")
-      .replace(/\\dist\\/g, "\\src\\")
+  if (inputFile === null) {
+    console.log(
+      kleur.red(stripIndent`
+        Couldn't detect the day directory!
 
-    inputFile = path.join(srcDir, "input.txt")
+        Please make sure that the day folder is named "dayXX",
+        where each X means number from 0 to 9.
+      `),
+    )
+    return
+  }
+
+  if (day === null) {
+    console.log(
+      kleur.red(stripIndent`
+        Couldn't detect the day number!
+
+        Make sure that your directory or file name contains the day number
+        inf format "dayXX", where each X means number from 0 to 9.
+      `),
+    )
+    return
   }
 
   if (!fs.existsSync(inputFile)) {
