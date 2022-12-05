@@ -38,7 +38,7 @@ switch (String(command || "").toLowerCase()) {
   }
   case "update:readme": {
     updateReadme()
-    break;
+    break
   }
   default: {
     console.log("Command not supported")

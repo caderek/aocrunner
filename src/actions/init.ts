@@ -70,8 +70,8 @@ const init = async () => {
     save(dir, "tsconfig.json", tsconfigJSON(setup))
   }
 
-  if(setup.vscodeSettings) {
-    const vscodeSettingsDir = path.join(dir, ".vscode");
+  if (setup.vscodeSettings) {
+    const vscodeSettingsDir = path.join(dir, ".vscode")
     fs.mkdirSync(vscodeSettingsDir, { recursive: true })
     save(vscodeSettingsDir, "launch.json", launchJSON(setup))
   }
