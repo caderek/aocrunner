@@ -80,6 +80,14 @@ const initPrompt = () => {
         ],
         initial: 0,
       },
+      {
+        type: "toggle",
+        name: "vscodeSettings",
+        message: "(Optional) Would you like to include the default launch.json configuration ? ",
+        initial: false,
+        active: "yes",
+        inactive: "no",
+      }
     ],
     { onCancel },
   )
