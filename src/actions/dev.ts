@@ -1,22 +1,23 @@
-import fs from "fs"
-import path from "path"
-import { stripIndent } from "common-tags"
 import chokidar from "chokidar"
+import { stripIndent } from "common-tags"
+import fs from "fs"
 import kleur from "kleur"
+import path from "path"
+import { getInput, sendSolution, Status } from "../io/api.js"
+import { readConfig, saveConfig } from "../io/config.js"
+import copy from "../io/copy.js"
 import getAllFiles from "../utils/getAllFiles.js"
 import buildSource from "./processes/buildSource.js"
-import runSolution from "./processes/runSolution.js"
 import getLatestVersion from "./processes/getLatestVersion.js"
-import copy from "../io/copy.js"
-import { readConfig, saveConfig } from "../io/config.js"
-import { getInput, sendSolution, Status } from "../io/api.js"
+import runSolution from "./processes/runSolution.js"
 
+import prompts from "prompts"
 import readmeDayMD from "../configs/readmeDayMD.js"
 import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
 import commandPrompt from "../prompts/commandPrompt.js"
 import type { Config } from "../types/common"
-import updateReadme from "./updateReadMe.js"
 import version from "../version.js"
+import updateReadme from "./updateReadMe.js"
 
 let latestVersion: string | null = null
 getLatestVersion().then((v) => {
@@ -66,8 +67,6 @@ const showInfo = () => {
 
   console.log()
 }
-
-
 
 const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   console.log(`\nPart ${part}:`)
@@ -137,11 +136,31 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   return false
 }
 
-const dev = (dayRaw: string | undefined) => {
-  const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
+const dev = async (dayRaw: string | undefined) => {
+  const defaultToday = new Date()
+    .toLocaleString("en-US", {
+      timeZone: "EST",
+      timeZoneName: "short",
+    })
+    .split("/")[1]
+
+  const day =
+    (dayRaw && (dayRaw.match(/\d+/) ?? [])[0]) ||
+    (
+      await prompts({
+        type: "select",
+        name: "day",
+        message: `Autoselect current day (${defaultToday})`,
+        choices: [
+          { title: `yes`, value: defaultToday },
+          { title: "no", value: null },
+        ],
+      })
+    )?.day
+
   const config = readConfig()
 
-  if (day === undefined) {
+  if (!day) {
     console.log(kleur.red("No day specified."))
     process.exit(1)
   }
