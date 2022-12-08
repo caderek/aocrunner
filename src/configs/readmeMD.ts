@@ -59,7 +59,7 @@ const renderResults = (config: Config) => {
       Time part 2: ${
         part2.time !== null && part2.solved ? toFixed(part2.time) + "ms" : "-"
       }
-      Both parts: ${timeBoth !== 0 ? timeBoth + "ms" : "-"}
+      Both parts: ${timeBoth !== 0 ? toFixed(timeBoth) + "ms" : "-"}
       \`\`\`
     `
     })
