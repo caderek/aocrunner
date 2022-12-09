@@ -24,26 +24,34 @@ const init = async () => {
 
   const setup: Setup = await initPrompt()
 
-  const installCmd =
-    setup.packageManager === "npm"
-      ? "npm i"
-      : setup.packageManager === "yarn"
-      ? "yarn"
-      : "pnpm install"
+  const packageManagers = {
+    npm: {
+      install: "npm i",
+      format: "npm run format",
+      start: "npm start",
+      version: "npm -v",
+    },
+    yarn: {
+      install: "yarn",
+      format: "yarn format",
+      start: "yarn start",
+      version: "yarn -v",
+    },
+    pnpm: {
+      install: "pnpm install",
+      format: "pnpm format",
+      start: "pnpm start",
+      version: "pnpm -v",
+    },
+  } as const
 
-  const formatCmd =
-    setup.packageManager === "npm"
-      ? "npm run format"
-      : setup.packageManager === "yarn"
-      ? "yarn format"
-      : "pnpm format"
+  const installCmd = packageManagers[setup.packageManager].install
 
-  const startCmd =
-    setup.packageManager === "npm"
-      ? "npm start"
-      : setup.packageManager === "yarn"
-      ? "yarn start"
-      : "pnpm start"
+  const formatCmd = packageManagers[setup.packageManager].format
+
+  const startCmd = packageManagers[setup.packageManager].start
+
+  const versionCmd = packageManagers[setup.packageManager].version
 
   const dir = setup.name
   const srcDir = path.join(dir, "src")
@@ -55,9 +63,15 @@ const init = async () => {
 
   fs.mkdirSync(srcDir, { recursive: true })
 
+  const packageManagerVersion = execSync(versionCmd).toString().trim()
+
   const config = runnerJSON(setup)
 
-  save(dir, "package.json", packageJSON(setup))
+  save(
+    dir,
+    "package.json",
+    packageJSON(Object.assign(setup, { packageManagerVersion })),
+  )
   save(dir, ".prettierrc.json", prettierJSON(setup))
   save(dir, ".gitignore", gitignoreTXT(setup))
   save(dir, ".prettierignore", prettierignoreTXT(setup))

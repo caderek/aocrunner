@@ -67,8 +67,6 @@ const showInfo = () => {
   console.log()
 }
 
-
-
 const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   console.log(`\nPart ${part}:`)
   const dayData =

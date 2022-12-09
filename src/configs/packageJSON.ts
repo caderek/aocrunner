@@ -1,8 +1,18 @@
 import type { Setup } from "../types/common"
 import version from "../version.js"
 
-const packageJSON = ({ year, language, author }: Setup) => {
+const packageJSON = ({
+  year,
+  language,
+  author,
+  packageManager,
+  packageManagerVersion,
+}: Setup) => {
   const build = language === "ts" ? { build: "aocrunner build" } : {}
+  const preferredPackageManager =
+    packageManager && Boolean(packageManagerVersion)
+      ? { packageManager: `^${packageManager}@${packageManagerVersion}` }
+      : {}
 
   return {
     name: `aoc${year}`,
@@ -27,6 +37,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
     engines: {
       node: ">=16.13.0",
     },
+    ...preferredPackageManager,
   }
 }
 
