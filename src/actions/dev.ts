@@ -170,7 +170,22 @@ const dev = (dayRaw: string | undefined) => {
 
   if (!fs.existsSync(toDir)) {
     console.log("Creating from template...")
+    const aocDay = String(dayNum).padStart(2, "0")
+
     copy(fromDir, toDir)
+
+    const files = fs.readdirSync(toDir)
+    for (let i = 0; i < files.length; i += 1) {
+      const newName = files[i].replace(/{{AOC_DAY}}/g, aocDay)
+      if (newName !== files[i]) {
+        fs.renameSync(path.join(toDir, files[i]), path.join(toDir, newName))
+      }
+
+      const contents = fs
+        .readFileSync(path.join(toDir, newName), "utf-8")
+        .replace(/{{AOC_DAY}}/g, aocDay)
+      fs.writeFileSync(path.join(toDir, newName), contents)
+    }
 
     fs.writeFileSync(inputPath, "")
 
