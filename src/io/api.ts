@@ -139,7 +139,7 @@ const sendSolution = (
       ...USER_AGENT_HEADER,
     },
     method: "POST",
-    body: `level=${part}&answer=${solution}`,
+    body: `level=${part}&answer=${encodeURIComponent(solution)}`,
   })
     .then((res) => {
       if (res.status !== 200) {
