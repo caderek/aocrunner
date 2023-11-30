@@ -3,6 +3,7 @@ import version from "../version.js"
 
 const packageJSON = ({ year, language, author }: Setup) => {
   const build = language === "ts" ? { build: "aocrunner build" } : {}
+  const esbuild = language === "ts" ? { esbuild: "^0.19.8" } : {}
 
   return {
     name: `aoc${year}`,
@@ -21,6 +22,7 @@ const packageJSON = ({ year, language, author }: Setup) => {
     devDependencies: {
       "@types/node": "^16.11.6",
       aocrunner: `^${version}`,
+      ...esbuild,
       prettier: "^2.8.0",
     },
     dependencies: {},
