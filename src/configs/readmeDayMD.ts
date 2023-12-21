@@ -9,6 +9,14 @@ const readmeDayMD = (year: number, day: number) => {
 
     Task description: [link](https://adventofcode.com/${year}/day/${day})
 
+	## Results
+
+	\`\`\`
+	Time part 1: -
+	Time part 2: -
+	Both parts: -
+	\`\`\`
+		
     ## Notes
 
     ...
