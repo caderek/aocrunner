@@ -11,7 +11,7 @@ type Tests = {
   expected: string | number | bigint | void
 }[]
 
-type Solution = (input: string) => string | number | bigint | void
+type Solution = (input: string, testName?: string) => string | number | bigint | void
 
 type Solutions = {
   part1?: {
@@ -37,9 +37,8 @@ const runTests = async (
 
     const data = trimTestInputs ? stripIndent(input) : input
 
-    const result = await solution(data)
-
     const testName = `Part ${part}, test ${i + 1}${name ? `, ${name}` : ""}`
+    const result = await solution(data, testName)
 
     if (result === expected) {
       console.log(kleur.green(`${testName} - passed`))
