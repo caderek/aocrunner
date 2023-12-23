@@ -14,5 +14,13 @@ const readDayReadme = (day: number): string => {
 const saveDayReadme = (day: number, readme: string) => {
 	fs.writeFileSync(`src/day${day.toString().padStart(2, '0')}/README.md`, readme)
 }
+
+const readGlobalReadme = (): string => {
+	return fs.readFileSync("../README.md").toString()
+}
   
-export { saveReadme, readReadme, saveDayReadme, readDayReadme }
+const saveGlobalReadme = (readme: string) => {
+	fs.writeFileSync("../README.md", readme)
+}
+  
+export { saveReadme, readReadme, saveDayReadme, readDayReadme, readGlobalReadme, saveGlobalReadme }

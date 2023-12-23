@@ -123,7 +123,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   if (status === Status["SOLVED"]) {
     config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
     saveConfig(config)
-    updateReadme()
+    updateReadme(dayNum)
     return true
   }
 
