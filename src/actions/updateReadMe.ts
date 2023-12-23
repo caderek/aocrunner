@@ -136,37 +136,37 @@ export const updateReadme = (currentDay?: number) => {
 	saveReadme(readme)
 
 	// Update day readme files
-	config.days.filter((d, index) => (currentDay == undefined || (currentDay - 1 == index)) && (d.part1.solved || d.part2.solved))
+	config.days
 		.forEach((d, index) => {
-			const day = String(index + 1).padStart(2, "0")
-			const part1 = d.part1;
-			const part2 = d.part2;
+			if ((currentDay == undefined || (currentDay - 1 == index)) && (d.part1.solved || d.part2.solved)) {
+				const part1 = d.part1;
+				const part2 = d.part2;
 
-			let timeBoth = 0
+				let timeBoth = 0
 
-			if (part1.solved) {
-				timeBoth += part1.time ?? 0
+				if (part1.solved) {
+					timeBoth += part1.time ?? 0
+				}
+				if (part2.solved) {
+					timeBoth += part2.time ?? 0
+				}
+
+				const dayResults = stripIndents`
+				\`\`\`
+				Time part 1: ${part1.time !== null && part1.solved ? toFixed(part1.time) + "ms" : "-"}
+				Time part 2: ${part2.time !== null && part2.solved ? toFixed(part2.time) + "ms" : "-"}
+				Both parts: ${timeBoth !== 0 ? toFixed(timeBoth) + "ms" : "-"}
+				\`\`\`
+				`;
+
+				const dayReadme = readDayReadme(index + 1)
+					.replace(
+						/## Results(.|\n|\r)+## Notes/,
+						`## Results\n\n${dayResults}\n\n## Notes`
+					);
+				
+				saveDayReadme(index + 1, dayReadme)
 			}
-			if (part2.solved) {
-				timeBoth += part2.time ?? 0
-			}
-
-			const dayResults = stripIndents`
-			\`\`\`
-			Time part 1: ${part1.time !== null && part1.solved ? toFixed(part1.time) + "ms" : "-"}
-			Time part 2: ${part2.time !== null && part2.solved ? toFixed(part2.time) + "ms" : "-"}
-			Both parts: ${timeBoth !== 0 ? toFixed(timeBoth) + "ms" : "-"}
-			\`\`\`
-			`;
-
-			const dayReadme = readDayReadme(index + 1)
-				.replace(
-					/## Results(.|\n|\r)+## Notes/,
-					`## Results\n\n${dayResults}\n\n## Notes`
-				);
-			
-			console.log(`Updating day ${day} readme...`);
-			saveDayReadme(index + 1, dayReadme)
 		});
 }
 
