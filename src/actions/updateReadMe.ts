@@ -3,10 +3,33 @@ import toFixed from "../utils/toFixed.js"
 import { stripIndents } from "common-tags"
 import { renderDayBadges, renderResults } from "../configs/readmeMD.js"
 import { readConfig } from "../io/config.js"
+import type { Config } from "../types/common"
 
 export const updateReadme = (currentDay?: number) => {
 	const config = readConfig()
 
+	updateGlobalReadme(config);
+
+	const badges = renderDayBadges(config)
+	const results = renderResults(config)
+
+	// Update year readme file
+	const readme = readReadme()
+		.replace(
+			/<!--SOLUTIONS-->(.|\n|\r)+<!--\/SOLUTIONS-->/,
+			`<!--SOLUTIONS-->\n\n${badges}\n\n<!--/SOLUTIONS-->`,
+		)
+		.replace(
+			/<!--RESULTS-->(.|\n|\r)+<!--\/RESULTS-->/,
+			`<!--RESULTS-->\n\n${results}\n\n<!--/RESULTS-->`,
+		)
+
+	saveReadme(readme)
+
+	updateDayReadme(config, currentDay);
+}
+
+const updateGlobalReadme = (config: Config) => {
 	// Update global readme file
 	try {
 		const currentYear = config.year;
@@ -118,23 +141,9 @@ export const updateReadme = (currentDay?: number) => {
 			console.error({ error });		
 		}
 	}
+}
 
-	const badges = renderDayBadges(config)
-	const results = renderResults(config)
-
-	// Update year readme file
-	const readme = readReadme()
-		.replace(
-			/<!--SOLUTIONS-->(.|\n|\r)+<!--\/SOLUTIONS-->/,
-			`<!--SOLUTIONS-->\n\n${badges}\n\n<!--/SOLUTIONS-->`,
-		)
-		.replace(
-			/<!--RESULTS-->(.|\n|\r)+<!--\/RESULTS-->/,
-			`<!--RESULTS-->\n\n${results}\n\n<!--/RESULTS-->`,
-		)
-
-	saveReadme(readme)
-
+const updateDayReadme = (config: Config, currentDay?: number) => {
 	// Update day readme files
 	config.days
 		.forEach((d, index) => {

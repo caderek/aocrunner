@@ -19,5 +19,9 @@ export type Config = {
   version: number
   year: number
   language: "js" | "ts"
-  days: { part1: DayConfig; part2: DayConfig }[]
+  days: { 
+    title: null | string;
+    part1: DayConfig; 
+    part2: DayConfig 
+  }[]
 }

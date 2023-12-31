@@ -9,7 +9,7 @@ import runSolution from "./processes/runSolution.js"
 import getLatestVersion from "./processes/getLatestVersion.js"
 import copy from "../io/copy.js"
 import { readConfig, saveConfig } from "../io/config.js"
-import { getInput, sendSolution, Status } from "../io/api.js"
+import { getInput, getPuzzleTitle, sendSolution, Status } from "../io/api.js"
 
 import readmeDayMD from "../configs/readmeDayMD.js"
 import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
@@ -17,6 +17,7 @@ import commandPrompt from "../prompts/commandPrompt.js"
 import type { Config } from "../types/common"
 import updateReadme from "./updateReadMe.js"
 import version from "../version.js"
+import { get } from "http"
 
 let latestVersion: string | null = null
 getLatestVersion().then((v) => {
@@ -137,7 +138,7 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   return false
 }
 
-const dev = (dayRaw: string | undefined) => {
+const dev = async (dayRaw: string | undefined) => {
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
   const config = readConfig()
 
@@ -175,7 +176,12 @@ const dev = (dayRaw: string | undefined) => {
     fs.writeFileSync(inputPath, "")
 
     if (!fs.existsSync(dayReadmePath)) {
-      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum))
+	  const dayTitle = await getPuzzleTitle(config.year, dayNum, inputPath);
+	  if ( dayTitle != null ) {
+	    config.days[dayNum - 1].title = dayTitle;
+		saveConfig(config);
+	  }
+      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum, dayTitle))
     }
   }
 

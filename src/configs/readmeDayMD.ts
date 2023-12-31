@@ -1,9 +1,9 @@
 import type { Setup, Config } from "../types/common"
 import { stripIndents } from "common-tags"
 
-const readmeDayMD = (year: number, day: number) => {
+const readmeDayMD = (year: number, day: number, title: string | null) => {
   return stripIndents`
-    # 🎄 Advent of Code ${year} - day ${day} 🎄
+    # 🎄 Advent of Code ${year} - Day ${day} ${title != null ? "- " + title : ""} 🎄
 
     ## Info
 

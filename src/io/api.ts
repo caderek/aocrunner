@@ -82,6 +82,32 @@ const handleErrors = (e: Error) => {
   return Status["ERROR"]
 }
 
+const getPuzzleTitle = async (year: number, day: number, path: string) => {
+  const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
+
+  try {
+	const res = await fetch(`${API_URL}/${year}/day/${day}`, {
+		headers: {
+		cookie: `session=${process.env.AOC_SESSION_KEY}`,
+		...USER_AGENT_HEADER,
+		},
+	});
+
+	if (res.status !== 200) {
+		throw new Error(String(res.status))
+	}
+	
+	const body = await res.text();
+    // Extract the content of the h2 element using a regular expression
+    const h2ContentRegex = /<h2>--- Day \d+: (.*?) ---<\/h2>/;
+    const matches = body.match(h2ContentRegex);
+    return matches ? matches[1] : null;
+  } catch (error) {
+	handleErrors(error as Error);
+  }
+  return null;
+}
+
 const getInput = async (year: number, day: number, path: string) => {
   const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
 
@@ -222,4 +248,4 @@ const sendSolution = (
     .catch(handleErrors)
 }
 
-export { getInput, sendSolution, Status }
+export { getInput, getPuzzleTitle, sendSolution, Status }

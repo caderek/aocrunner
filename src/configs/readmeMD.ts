@@ -30,7 +30,7 @@ const renderResults = (config: Config) => {
   let totalStars = 0
 
   const results = config.days
-    .map(({ part1, part2 }, index) => {
+    .map(({ title, part1, part2 }, index) => {
       const day = String(index + 1).padStart(2, "0")
 
       let timeBoth = 0
@@ -52,7 +52,7 @@ const renderResults = (config: Config) => {
 
       return stripIndents`
       \`\`\`
-      Day ${day}
+      Day ${day}${title != null ? " - " + title : ""}
       Time part 1: ${
         part1.time !== null && part1.solved ? toFixed(part1.time) + "ms" : "-"
       }

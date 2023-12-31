@@ -6,6 +6,7 @@ const aocrunnerJSON = ({ year, language }: Setup): Config => {
     year,
     language,
     days: new Array(25).fill(0).map((_, i) => ({
+      title: null,	
       part1: {
         solved: false,
         result: null,
