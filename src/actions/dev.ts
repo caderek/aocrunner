@@ -9,7 +9,7 @@ import runSolution from "./processes/runSolution.js"
 import getLatestVersion from "./processes/getLatestVersion.js"
 import copy from "../io/copy.js"
 import { readConfig, saveConfig } from "../io/config.js"
-import { getInput, getPuzzleTitle, sendSolution, Status } from "../io/api.js"
+import { getInput, getPuzzleInfo, sendSolution, Status } from "../io/api.js"
 
 import readmeDayMD from "../configs/readmeDayMD.js"
 import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
@@ -169,31 +169,50 @@ const dev = async (dayRaw: string | undefined) => {
     console.log(kleur.red("Template folder does not exist!"))
   }
 
-  if (!fs.existsSync(toDir)) {
+  const toExists = fs.existsSync(toDir);
+  if (!toExists) {
     console.log("Creating from template...")
     copy(fromDir, toDir)
 
+	const [title, testData] = await getPuzzleInfo(config.year, dayNum, inputPath);
+
+	if ( config.language === "ts" ) {
+      const dayIndexFile = path.join(toDir, "index.ts");
+      if (fs.existsSync(toDir)) {
+        let dayIndexContent = fs.readFileSync(dayIndexFile).toString();
+        if ( testData != null ) {
+          const regex = /([ \t]*)\{testData\}/;
+          const match = dayIndexContent.match(regex);
+          if (match) {
+			  const indent = match[1];
+              const testDataIndented = testData.split("\n").filter( l => l != "" ).map(line => `${indent}${line}`).join("\n");
+			  dayIndexContent = dayIndexContent.replace(regex, testDataIndented);
+			  fs.writeFileSync(dayIndexFile, dayIndexContent);
+          }
+        }
+      }
+	}
+	
     fs.writeFileSync(inputPath, "")
 
     if (!fs.existsSync(dayReadmePath)) {
-	  const dayTitle = await getPuzzleTitle(config.year, dayNum, inputPath);
-	  if ( dayTitle != null ) {
-	    config.days[dayNum - 1].title = dayTitle;
+	  if ( title != null ) {
+	    config.days[dayNum - 1].title = title;
 		saveConfig(config);
 	  }
-      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum, dayTitle))
+      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum, title))
     }
   }
 
   getInput(config.year, dayNum, inputPath)
 
-  const files = getAllFiles("src")
-
-  if (config.language === "ts") {
-    buildSource(files)
-  }
-
-  runSolution(dayNum, indexFile)
+  if ( toExists ) {
+    const files = getAllFiles("src")
+    if (config.language === "ts") {
+      buildSource(files)
+    }
+    runSolution(dayNum, indexFile)
+  }	
 
   const reload = (file: string) => {
     if (![".js", ".ts", ".mjs"].includes(path.parse(file).ext)) {

@@ -82,7 +82,7 @@ const handleErrors = (e: Error) => {
   return Status["ERROR"]
 }
 
-const getPuzzleTitle = async (year: number, day: number, path: string) => {
+const getPuzzleInfo = async (year: number, day: number, path: string) => {
   const API_URL = process.env.AOC_API ?? "https://adventofcode.com"
 
   try {
@@ -97,15 +97,20 @@ const getPuzzleTitle = async (year: number, day: number, path: string) => {
 		throw new Error(String(res.status))
 	}
 	
-	const body = await res.text();
+	let body = await res.text();
     // Extract the content of the h2 element using a regular expression
-    const h2ContentRegex = /<h2>--- Day \d+: (.*?) ---<\/h2>/;
-    const matches = body.match(h2ContentRegex);
-    return matches ? matches[1] : null;
+    let matches = body.match(/<h2>--- Day \d+: (.*?) ---<\/h2>/);
+	const title = matches ? matches[1] : null;
+	if ( body.indexOf("For example:") > -1 ) {
+		body = body.split("For example:")[1];
+	}
+    matches = body.match(/<pre><code>(.*?)<\/code><\/pre>/s);
+	const testData = matches ? matches[1].trim() : null;
+	return [title, testData];
   } catch (error) {
-	handleErrors(error as Error);
+	  handleErrors(error as Error);
+	  return [null, null];
   }
-  return null;
 }
 
 const getInput = async (year: number, day: number, path: string) => {
@@ -248,4 +253,4 @@ const sendSolution = (
     .catch(handleErrors)
 }
 
-export { getInput, getPuzzleTitle, sendSolution, Status }
+export { getInput, getPuzzleInfo, sendSolution, Status }
