@@ -84,7 +84,7 @@ const init = async () => {
     execSync(formatCmd, { cwd: dir, stdio: "inherit" })
   }
 
-  const yearDir = path.join(dir, setup.year.toString())
+  const yearDir = path.join(srcDir, setup.year.toString())
 
   if (fs.existsSync(yearDir)) {
     console.log(`Year ${setup.year} Project already exists.`)

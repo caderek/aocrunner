@@ -4,7 +4,7 @@
     "module": "es2020",
     "removeComments": true,
     "declaration": true,
-    "outDir": "node_modules/aocrunner/lib",
+    "outDir": "./lib",
     "preserveConstEnums": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
