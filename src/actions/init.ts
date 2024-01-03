@@ -14,13 +14,14 @@ import prettierignoreTXT from "../configs/prettierignoreTXT.js"
 import runnerJSON from "../configs/runnerJSON.js"
 import envTXT from "../configs/envTXT.js"
 import readmeMD from "../configs/readmeMD.js"
+import readmeYearMD from "../configs/readmeYearMD.js"
 
 import type { Setup } from "../types/common"
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const init = async () => {
-  console.log("Initializing")
+  console.log("Initializing...")
 
   const setup: Setup = await initPrompt()
 
@@ -47,43 +48,51 @@ const init = async () => {
 
   const dir = setup.name
   const srcDir = path.join(dir, "src")
-
-  if (fs.existsSync(dir)) {
-    console.log("Project already exists. Aborted.")
-    process.exit(1)
-  }
-
-  fs.mkdirSync(srcDir, { recursive: true })
-
   const config = runnerJSON(setup)
 
-  save(dir, "package.json", packageJSON(setup))
-  save(dir, ".prettierrc.json", prettierJSON(setup))
-  save(dir, ".gitignore", gitignoreTXT(setup))
-  save(dir, ".prettierignore", prettierignoreTXT(setup))
-  save(dir, ".aocrunner.json", config)
-  save(dir, ".env", envTXT)
-  save(dir, "README.md", readmeMD(setup, startCmd, installCmd, config))
-
-  if (setup.language === "ts") {
-    save(dir, "tsconfig.json", tsconfigJSON(setup))
+  if (fs.existsSync(dir)) {
+    console.log("AOCRunner Project already exists.")
+  }
+  else {
+	fs.mkdirSync(srcDir, { recursive: true })
+    save(dir, "package.json", packageJSON(setup))
+    save(dir, ".prettierrc.json", prettierJSON(setup))
+    save(dir, ".gitignore", gitignoreTXT(setup))
+    save(dir, ".prettierignore", prettierignoreTXT(setup))
+    save(dir, ".env", envTXT)
+    save(dir, "README.md", readmeMD(setup, startCmd, installCmd))
+	save(dir, ".aocrunner.json", config)
+    
+    if (setup.language === "ts") {
+      save(dir, "tsconfig.json", tsconfigJSON(setup))
+    }
+  
+    const templatesDir = path.resolve(
+      dirname,
+      "..",
+      "..",
+      "templates",
+      setup.language,
+    )
+  
+    copy(templatesDir, srcDir)
+  
+    console.log("\nInstalling dependencies...\n")
+    execSync(installCmd, { cwd: dir, stdio: "inherit" })
+  
+    console.log("\nFormatting the source files...\n")
+    execSync(formatCmd, { cwd: dir, stdio: "inherit" })
   }
 
-  const templatesDir = path.resolve(
-    dirname,
-    "..",
-    "..",
-    "templates",
-    setup.language,
-  )
+  const yearDir = path.join(dir, setup.year.toString())
 
-  copy(templatesDir, srcDir)
-
-  console.log("\nInstalling dependencies...\n")
-  execSync(installCmd, { cwd: dir, stdio: "inherit" })
-
-  console.log("\nFormatting the source files...\n")
-  execSync(formatCmd, { cwd: dir, stdio: "inherit" })
+  if (fs.existsSync(yearDir)) {
+    console.log(`Year ${setup.year} Project already exists.`)
+  }
+  else {
+	fs.mkdirSync(yearDir, { recursive: true })
+	save(yearDir, "README.md", readmeYearMD(setup.language, config.years.find(y => y.year === setup.year)!))
+  }
 
   console.log(
     kleur.green("\nDone!\n\n") +

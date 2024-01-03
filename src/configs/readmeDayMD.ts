@@ -1,4 +1,3 @@
-import type { Setup, Config } from "../types/common"
 import { stripIndents } from "common-tags"
 
 const readmeDayMD = (year: number, day: number, title: string | null) => {

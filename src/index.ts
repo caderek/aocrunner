@@ -82,6 +82,7 @@ const runSolution = async (solution: Solution, input: string, part: 1 | 2) => {
 const runAsync = async (
   solutions: Solutions,
   inputFile: string,
+  year: number,
   day: number,
 ) => {
   const config = readConfig()
@@ -125,23 +126,24 @@ const runAsync = async (
   }
 
   console.log(`\nTotal time: ${toFixed(totalTime)}ms`)
-
-  config.days[day - 1].part1.result =
+  const configYear = config.years.find(y => y.year === year)!;
+  configYear.days[day - 1].part1.result =
     output1?.result === undefined ? null : String(output1.result)
 
-  config.days[day - 1].part1.time =
+  configYear.days[day - 1].part1.time =
     output1?.result === undefined ? null : output1.time
 
-  config.days[day - 1].part2.result =
+  configYear.days[day - 1].part2.result =
     output2?.result === undefined ? null : String(output2.result)
 
-  config.days[day - 1].part2.time =
+  configYear.days[day - 1].part2.time =
     output2?.result === undefined ? null : output2.time
 
   saveConfig(config)
 }
 
 const run = (solutions: Solutions, customInputFile?: string) => {
+  let year = null
   let day = null
   let inputFile = null
 
@@ -149,9 +151,11 @@ const run = (solutions: Solutions, customInputFile?: string) => {
     const dayName = (customInputFile.match(/day\d\d/) || [])[0]
     inputFile = customInputFile
     day = dayName ? Number(dayName.slice(-2)) : null
+	// Don't have year parsed here, need to figure out how this funciton is used
   } else {
     const dayData = getDayData()
-    day = dayData.day
+    year = dayData.year
+	day = dayData.day
     inputFile = dayData.inputFile
   }
 
@@ -167,13 +171,25 @@ const run = (solutions: Solutions, customInputFile?: string) => {
     return
   }
 
+  if (year === null) {
+    console.log(
+      kleur.red(stripIndent`
+        Couldn't detect the year number!
+
+        Make sure that your directory contains the year number
+        in format "XXXX" from 2015 to the current year.
+      `),
+    )
+    return
+  }
+
   if (day === null) {
     console.log(
       kleur.red(stripIndent`
         Couldn't detect the day number!
 
         Make sure that your directory or file name contains the day number
-        inf format "dayXX", where each X means number from 0 to 9.
+        in format "dayXX", where each X means number from 0 to 9.
       `),
     )
     return
@@ -191,7 +207,7 @@ const run = (solutions: Solutions, customInputFile?: string) => {
     return
   }
 
-  runAsync(solutions, inputFile, day)
+  runAsync(solutions, inputFile, year, day)
 }
 
 export default run

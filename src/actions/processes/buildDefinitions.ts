@@ -1,10 +1,11 @@
 import { spawnSync } from "child_process"
+import path from "path"
 import kleur from "kleur"
 
-const buildDefinitions = () => {
+const buildDefinitions = (year: string) => {
   console.log("\nBuilding definition files...\n")
   const t0 = process.hrtime.bigint()
-  spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", "dist"], {
+  spawnSync("tsc", ["--emitDeclarationOnly", "--outDir", path.join(year, "dist")], {
     stdio: "inherit",
     shell: true,
   })

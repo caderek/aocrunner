@@ -2,7 +2,8 @@
 import init from "./actions/init.js"
 import dev from "./actions/dev.js"
 import build from "./actions/build.js"
-import updateReadme from "./actions/updateReadMe.js"
+import kleur from "kleur"
+import updateReadmes from "./actions/updateReadMe.js"
 import dotenv from "dotenv"
 import version from "./version.js"
 
@@ -29,15 +30,19 @@ switch (String(command || "").toLowerCase()) {
     break
   }
   case "day": {
-    dev(args[0])
+	if ( args.length < 2 ) {
+		console.log(kleur.red("No must specify both a year and a day to start."))
+		break;
+	}
+    dev(args[0], args[1])
     break
   }
   case "build": {
-    build()
+    build(args[0])
     break
   }
   case "update:readme": {
-    updateReadme()
+    updateReadmes(args[0])
     break;
   }
   default: {

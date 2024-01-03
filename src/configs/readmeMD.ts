@@ -1,110 +1,151 @@
-import type { Setup, Config } from "../types/common"
+import type { Setup, YearConfig } from "../types/common"
 import { stripIndents } from "common-tags"
 import toFixed from "../utils/toFixed.js"
+import { readGlobalReadme } from "../io/readme.js"
 
-const renderDayBadges = (config: Config) => {
-  return config.days
-    .map(({ part1, part2 }, index) => {
-      const day = String(index + 1).padStart(2, "0")
+const renderGlobalYearInfo = (config: YearConfig) => {
+	try {
+		const currentYear = config.year;
+		let globalReadme = readGlobalReadme();
 
-      const color =
-        (part1.solved && part2.solved) || (part1.solved && day === "25")
-          ? "green"
-          : part1.solved || part2.solved
-          ? "yellow"
-          : "gray"
+		let totalStars = 0;
+		let totalTime = 0;
+		let stars = config.days
+			.map(({ part1, part2 }, index) => {
+				if (part1.solved) {
+					totalStars++;
+					totalTime += part1.time ?? 0;
+				}
+				if (part2.solved) {
+					totalStars++;
+					totalTime += part2.time ?? 0;
+				}
+				const star =
+					part1.solved && part2.solved ? "★" :
+						part1.solved || part2.solved ? "☆" : "⭒";
+	
+				return star;
+			}).join("");
 
-      const badge = `![Day](https://badgen.net/badge/${day}/%E2%98%8${
-        part1.solved ? 5 : 6
-      }%E2%98%8${
-        part2.solved || (part1.solved && day === "25") ? 5 : 6
-      }/${color})`
+		let regex = /<!--SOLUTIONS-->([\s\S]+?)<!--\/SOLUTIONS-->/;
+		let match = globalReadme.match(regex);
+		let badges = "";
+		let results = "";
 
-      return color !== "gray" ? `[${badge}](src/day${day})` : badge
-    })
-    .join("\n")
-}
+		if (match != null) {
+			const lines = match[1].split("\n").filter(line => line.trim() != "");
+	
+			let yearReplaceIndex = lines.findIndex(line => line.includes(`badge/${currentYear}`));
+	
+			if (yearReplaceIndex == -1) {
+				// Find position...
+				let yearInsertIndex = -1;
+				for (let index = 0; index < lines.length; index++) {
+					const [left, right] = lines[index].split("badge/");
+					if (right != undefined) {
+						if ( Number(right.substring(0, 4)) < currentYear ) {
+							yearInsertIndex = index;
+							break;
+						}
+					}
+				}
 
-const renderResults = (config: Config) => {
-  let totalTime = 0
-  let totalStars = 0
+				if (yearInsertIndex == -1) {
+					yearInsertIndex = lines.length;
+				}
 
-  const results = config.days
-    .map(({ title, part1, part2 }, index) => {
-      const day = String(index + 1).padStart(2, "0")
+				lines.splice(yearReplaceIndex = yearInsertIndex, 0, "");
+			}
+		
+			if (totalStars >= 49) {
+				stars = stars.replaceAll("★", "✨")
+			}
+			const color = totalStars >= 40 ? "green" : totalStars >= 20 ? "yellow" : "gray";
+		
+			lines[yearReplaceIndex] = `[![Year](https://badgen.net/badge/${currentYear}/${stars}/${color}?icon=typescript&labelColor=blue&scale=1.3)](src/${currentYear})  `;
+		
+			badges = lines.join("\n");
+		}
 
-      let timeBoth = 0
+		regex = /<!--RESULTS-->([\s\S]+?)<!--\/RESULTS-->/;
+		match = globalReadme.match(regex);
 
-      if (part1.solved) {
-        totalStars++
-        totalTime += part1.time ?? 0
-        timeBoth += part1.time ?? 0
-      }
-      if (part2.solved) {
-        totalStars++
-        totalTime += part2.time ?? 0
-        timeBoth += part2.time ?? 0
-      }
+		if (match != null) {
+			const lines = match[1].split("\n").filter(line => line.trim() != "");
 
-      if (day === "25" && part1.solved) {
-        totalStars++
-      }
+			let yearReplaceIndex = lines.findIndex(line => line.includes(`Year ${currentYear}`)) - 1;
+	
+			if (yearReplaceIndex < 0) {
+				// Find position...
+				let yearInsertIndex = -1;
+				for (let index = 0; index < lines.length; index++) {
+					const [left, right] = lines[index].split("Year ");
+					if (right != undefined) {
+						if ( Number(right) < currentYear ) {
+							yearInsertIndex = index - 1;
+							break;
+						}
+					}
+				}
 
-      return stripIndents`
-      \`\`\`
-      Day ${day}${title != null ? " - " + title : ""}
-      Time part 1: ${
-        part1.time !== null && part1.solved ? toFixed(part1.time) + "ms" : "-"
-      }
-      Time part 2: ${
-        part2.time !== null && part2.solved ? toFixed(part2.time) + "ms" : "-"
-      }
-      Both parts: ${timeBoth !== 0 ? toFixed(timeBoth) + "ms" : "-"}
-      \`\`\`
-    `
-    })
-    .join("\n\n")
+				if (yearInsertIndex > -1) {
+					yearReplaceIndex = yearInsertIndex;
+				}
+				else {
+					yearReplaceIndex = lines.length;
+				}
+				lines.splice(yearReplaceIndex, 0, ...["", "", "", "", "", ""]);
+			}			
 
-  const summary = stripIndents`
-    \`\`\`
-    Total stars: ${totalStars}/50
-    Total time: ${toFixed(totalTime)}ms
-    \`\`\`
-  `
+			const yearInfo = [
+				"",
+				"```",
+				`Year ${currentYear}`,
+				`Total stars: ${totalStars}/50`,
+				`Total time: ${toFixed(totalTime)}ms`,
+				"```"
+			]
 
-  return [results, summary].join("\n\n")
+			lines.splice(yearReplaceIndex, 6, ...yearInfo);
+			results = lines.join("\n");
+		}
+
+		return { badges, results };
+	} catch (error) {
+		if ( ( error as Error ).message.indexOf( "no such file or directory" ) == -1 ) {
+			console.error({ error });		
+		}
+		return undefined;
+	}
 }
 
 const readmeMD = (
-  { language, year }: Setup,
+  { language }: Setup,
   startCmd: string,
-  installCmd: string,
-  config: Config,
+  installCmd: string
 ) => {
   const lang = language === "ts" ? "TypeScript" : "JavaScript"
-
-  const dayBadges = renderDayBadges(config)
-  const results = renderResults(config)
-
+  const yearBadges = ""
+  const results = ""
+  
   return stripIndents`
     <!-- Entries between SOLUTIONS and RESULTS tags are auto-generated -->
 
-    [![AoC](https://badgen.net/badge/AoC/${year}/blue)](https://adventofcode.com/${year})
     [![Node](https://badgen.net/badge/Node/v16.13.0+/blue)](https://nodejs.org/en/download/)
     ![Language](https://badgen.net/badge/Language/${lang}/blue)
     [![Template](https://badgen.net/badge/Template/aocrunner/blue)](https://github.com/caderek/aocrunner)
 
-    # 🎄 Advent of Code ${year} 🎄
+    # 🎄 Advent of Code 🎄
 
     ## Solutions
 
     <!--SOLUTIONS-->
 
-    ${dayBadges}
+    ${yearBadges}
 
     <!--/SOLUTIONS-->
 
-    _Click a badge to go to the specific day._
+    _Click a badge to go to the specific year._
 
     ---
 
@@ -117,13 +158,13 @@ const readmeMD = (
     ## Running in dev mode
 
     \`\`\`
-    ${startCmd} <day>
+    ${startCmd} <year> <day>
     \`\`\`
 
     Example:
 
     \`\`\`
-    ${startCmd} 1
+    ${startCmd} 2023 1
     \`\`\`
 
     ---
@@ -142,5 +183,5 @@ const readmeMD = (
   `
 }
 
-export { renderDayBadges, renderResults }
+export { renderGlobalYearInfo }
 export default readmeMD
