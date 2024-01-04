@@ -160,10 +160,10 @@ const dev = async (yearRaw: string | undefined, dayRaw: string | undefined) => {
   if (configYear == undefined) {
 	const yearDir = path.join("src", year);
 	fs.mkdirSync(yearDir, { recursive: true })
-	save(yearDir, "README.md", readmeYearMD(config.language, config.years.find(y => y.year === Number(year))!))
     config.years.push(configYear = { year: yearNum, days: aocrunnerDaysJSON() });
 	config.years.sort((a, b) => a.year - b.year);
 	saveConfig(config);
+	save(yearDir, "README.md", readmeYearMD(config.language, config.years.find(y => y.year === Number(year))!))
   }
 
   if (yearNum < 2015 || yearNum > new Date().getFullYear()) {
