@@ -257,7 +257,7 @@ const dev = async (yearRaw: string | undefined, dayRaw: string | undefined) => {
   }
 
   chokidar
-    .watch(path.join("src", year), { ignoreInitial: true })
+    .watch([path.join("src", "utils"), path.join("src", year)], { ignoreInitial: true })
     .on("add", reload)
     .on("change", reload)
 
