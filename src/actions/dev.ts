@@ -167,11 +167,11 @@ const dev = async (yearRaw: string | undefined, dayRaw: string | undefined) => {
   }
 
   if (yearNum < 2015 || yearNum > new Date().getFullYear()) {
-    console.log(kleur.red(`Wrong year - chose day between 2015 and ${new Date().getFullYear()}.`))
+    console.log(kleur.red(`Wrong year - choose year between 2015 and ${new Date().getFullYear()}.`))
     process.exit(1)
   }
   if (dayNum < 1 || dayNum > 25) {
-    console.log(kleur.red("Wrong day - chose day between 1 and 25."))
+    console.log(kleur.red("Wrong day - choose day between 1 and 25."))
     process.exit(1)
   }
 
