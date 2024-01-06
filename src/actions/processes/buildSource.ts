@@ -4,7 +4,7 @@ import path from "path"
 const buildSource = (year: string, input: string | string[], sourcemap: boolean = true) => {
   const files = Array.isArray(input) ? input : [input]
   const outDir = Array.isArray(input)
-    ? path.join(year, "dist")
+    ? path.join("dist", year)
     : path.parse(input).dir.replace(/^src/, "dist")
 
   console.log("Transpiling...\n")

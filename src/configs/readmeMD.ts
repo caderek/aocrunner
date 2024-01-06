@@ -71,8 +71,18 @@ const renderGlobalYearInfo = (config: YearConfig) => {
 		match = globalReadme.match(regex);
 
 		if (match != null) {
-			const lines = match[1].split("\n").filter(line => line.trim() != "");
-
+			let lines = match[1].split("\n");
+			const firstContentIndex = lines.findIndex(line => line.trim() !== "");
+			let lastContentIndex = -1;
+			for (let index = lines.length - 1; index >= 0; index--) {
+				const line = lines[index];
+				if (line.trim() !== "") {
+					lastContentIndex = index;
+					break;
+				}
+			}
+			lines = lines.slice(firstContentIndex, lastContentIndex + 1);
+	
 			let yearReplaceIndex = lines.findIndex(line => line.includes(`Year ${currentYear}`)) - 1;
 	
 			if (yearReplaceIndex < 0) {
@@ -98,15 +108,19 @@ const renderGlobalYearInfo = (config: YearConfig) => {
 			}			
 
 			const yearInfo = [
-				"",
 				"```",
 				`Year ${currentYear}`,
 				`Total stars: ${totalStars}/50`,
 				`Total time: ${toFixed(totalTime)}ms`,
-				"```"
+				"```",
+				""
 			]
 
 			lines.splice(yearReplaceIndex, 6, ...yearInfo);
+
+			if (lines[lines.length - 1] == "") {
+				lines.pop();
+			}
 			results = lines.join("\n");
 		}
 
