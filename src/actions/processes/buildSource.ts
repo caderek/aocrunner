@@ -1,10 +1,10 @@
 import { spawnSync } from "child_process"
 import path from "path"
 
-const buildSource = (input: string | string[], sourcemap: boolean = true) => {
+const buildSource = (year: string, input: string | string[], sourcemap: boolean = true) => {
   const files = Array.isArray(input) ? input : [input]
   const outDir = Array.isArray(input)
-    ? "dist"
+    ? path.join("dist", year)
     : path.parse(input).dir.replace(/^src/, "dist")
 
   console.log("Transpiling...\n")

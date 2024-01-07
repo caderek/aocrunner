@@ -13,10 +13,10 @@ const tsconfigJSON = ({ strict }: Setup) => {
       allowSyntheticDefaultImports: true,
       moduleResolution: "node",
       forceConsistentCasingInFileNames: true,
-      importHelpers: true,
+      importHelpers: true
     },
     include: ["src"],
-    exclude: ["node_modules", "src/**/*.test.ts", "src/**/*.temp.ts"],
+    exclude: ["node_modules", "src/template", "src/**/*.test.ts", "src/**/*.temp.ts"]
   }
 }
 

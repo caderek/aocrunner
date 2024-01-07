@@ -8,14 +8,16 @@ import buildSource from "./processes/buildSource.js"
 import runSolution from "./processes/runSolution.js"
 import getLatestVersion from "./processes/getLatestVersion.js"
 import copy from "../io/copy.js"
+import save from "../io/save.js"
+import { aocrunnerDaysJSON } from "../configs/runnerJSON.js"
 import { readConfig, saveConfig } from "../io/config.js"
-import { getInput, sendSolution, Status } from "../io/api.js"
-
+import { getInput, getPuzzleInfo, sendSolution, Status } from "../io/api.js"
+import readmeYearMD from "../configs/readmeYearMD.js"
 import readmeDayMD from "../configs/readmeDayMD.js"
 import asciiPrompt, { AsciiOptions } from "../prompts/asciiPrompt.js"
 import commandPrompt from "../prompts/commandPrompt.js"
 import type { Config } from "../types/common"
-import updateReadme from "./updateReadMe.js"
+import updateReadmes from "./updateReadMe.js"
 import version from "../version.js"
 
 let latestVersion: string | null = null
@@ -67,12 +69,11 @@ const showInfo = () => {
   console.log()
 }
 
-
-
-const send = async (config: Config, dayNum: number, part: 1 | 2) => {
+const send = async (config: Config, yearNum: number, dayNum: number, part: 1 | 2) => {
+  const yearConfig = config.years.find(y => y.year == yearNum)!;
   console.log(`\nPart ${part}:`)
   const dayData =
-    part === 1 ? config.days[dayNum - 1].part1 : config.days[dayNum - 1].part2
+    part === 1 ? yearConfig.days[dayNum - 1].part1 : yearConfig.days[dayNum - 1].part2
 
   if (dayData.solved) {
     console.log(kleur.green(`Already solved!`))
@@ -118,17 +119,17 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
     }
   }
 
-  const status = await sendSolution(config.year, dayNum, part, dayData.result)
+  const status = await sendSolution(yearConfig.year, dayNum, part, dayData.result)
 
   if (status === Status["SOLVED"]) {
-    config.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
+    yearConfig.days[dayNum - 1][part === 1 ? "part1" : "part2"].solved = true
     saveConfig(config)
-    updateReadme()
+    updateReadmes(yearConfig.year.toString(), dayNum)
     return true
   }
 
   if (status === Status["WRONG"]) {
-    config.days[dayNum - 1][part === 1 ? "part1" : "part2"].attempts.push(
+    yearConfig.days[dayNum - 1][part === 1 ? "part1" : "part2"].attempts.push(
       dayData.result,
     )
     saveConfig(config)
@@ -137,27 +138,51 @@ const send = async (config: Config, dayNum: number, part: 1 | 2) => {
   return false
 }
 
-const dev = (dayRaw: string | undefined) => {
+const dev = async (yearRaw: string | undefined, dayRaw: string | undefined) => {
+  const year = yearRaw && (yearRaw.match(/\d{4}/) ?? [])[0]
   const day = dayRaw && (dayRaw.match(/\d+/) ?? [])[0]
-  const config = readConfig()
 
+  if (year === undefined) {
+    console.log(kleur.red("No year specified."))
+    process.exit(1)
+  }
   if (day === undefined) {
     console.log(kleur.red("No day specified."))
     process.exit(1)
   }
 
-  const dayNum = Number(day)
+  const config = readConfig();
+  const yearNum = Number(year);
+  const dayNum = Number(day);
 
+  let configYear = config.years.find(y => y.year == yearNum);
+
+  if (configYear == undefined) {
+	const yearDir = path.join("src", year);
+	fs.mkdirSync(yearDir, { recursive: true })
+    config.years.push(configYear = { year: yearNum, days: aocrunnerDaysJSON() });
+	config.years.sort((a, b) => a.year - b.year);
+	saveConfig(config);
+	save(yearDir, "README.md", readmeYearMD(config.language, config.years.find(y => y.year === Number(year))!))
+  }
+
+  if (yearNum < 2015 || yearNum > new Date().getFullYear()) {
+    console.log(kleur.red(`Wrong year - choose year between 2015 and ${new Date().getFullYear()}.`))
+    process.exit(1)
+  }
   if (dayNum < 1 || dayNum > 25) {
-    console.log(kleur.red("Wrong day - chose day between 1 and 25."))
+    console.log(kleur.red("Wrong day - choose day between 1 and 25."))
     process.exit(1)
   }
 
   const dayDir = `day${String(dayNum).padStart(2, "0")}`
   const fromDir = path.join("src", "template")
-  const toDir = path.join("src", dayDir)
+  const yearDir = path.join("src", yearRaw!)
+  
+  const toDir = path.join(yearDir, dayDir)
   const indexFile = path.join(
     config.language === "ts" ? "dist" : "src",
+	yearRaw!,
     dayDir,
     "index.js",
   )
@@ -168,26 +193,50 @@ const dev = (dayRaw: string | undefined) => {
     console.log(kleur.red("Template folder does not exist!"))
   }
 
-  if (!fs.existsSync(toDir)) {
+  const toExists = fs.existsSync(toDir);
+  if (!toExists) {
     console.log("Creating from template...")
     copy(fromDir, toDir)
 
+	const [title, testData] = await getPuzzleInfo(yearNum, dayNum, inputPath);
+
+	if ( config.language === "ts" ) {
+      const dayIndexFile = path.join(toDir, "index.ts");
+      if (fs.existsSync(toDir)) {
+        let dayIndexContent = fs.readFileSync(dayIndexFile).toString();
+        if ( testData != null ) {
+          const regex = /([ \t]*)\{testData\}/;
+          const match = dayIndexContent.match(regex);
+          if (match) {
+			  const indent = match[1];
+              const testDataIndented = testData.split("\n").filter( l => l != "" ).map(line => `${indent}${line}`).join("\n");
+			  dayIndexContent = dayIndexContent.replace(regex, testDataIndented);
+			  fs.writeFileSync(dayIndexFile, dayIndexContent);
+          }
+        }
+      }
+	}
+	
     fs.writeFileSync(inputPath, "")
 
     if (!fs.existsSync(dayReadmePath)) {
-      fs.writeFileSync(dayReadmePath, readmeDayMD(config.year, dayNum))
+	  if ( title != null ) {
+	    configYear.days[dayNum - 1].title = title;
+		saveConfig(config);
+	  }
+      fs.writeFileSync(dayReadmePath, readmeDayMD(configYear.year, dayNum, title))
     }
   }
 
-  getInput(config.year, dayNum, inputPath)
+  getInput(configYear.year, dayNum, inputPath)
 
-  const files = getAllFiles("src")
-
-  if (config.language === "ts") {
-    buildSource(files)
-  }
-
-  runSolution(dayNum, indexFile)
+  if ( toExists ) {
+    const files = getAllFiles(path.join("src", year))
+    if (config.language === "ts") {
+      buildSource(year, files)
+    }
+    runSolution(dayNum, indexFile)
+  }	
 
   const reload = (file: string) => {
     if (![".js", ".ts", ".mjs"].includes(path.parse(file).ext)) {
@@ -197,7 +246,7 @@ const dev = (dayRaw: string | undefined) => {
     console.clear()
 
     if (config.language === "ts") {
-      buildSource(file)
+      buildSource(year, file)
     }
 
     runSolution(dayNum, indexFile)
@@ -208,28 +257,29 @@ const dev = (dayRaw: string | undefined) => {
   }
 
   chokidar
-    .watch("src", { ignoreInitial: true })
+    .watch([path.join("src", "utils"), path.join("src", year)], { ignoreInitial: true })
     .on("add", reload)
     .on("change", reload)
 
-  const listenToInput = async () => {
+  const listenToInput = async (year: string) => {
     showInfo()
 
     const { command } = await commandPrompt()
 
-    const config = readConfig()
-
+    const config = readConfig();
+	const yearNum = Number(year)
+	
     switch (command.toLowerCase()) {
       case "fetch":
       case "f":
-        getInput(config.year, dayNum, inputPath)
+        getInput(yearNum, dayNum, inputPath)
         break
       case "send":
       case "s":
-        const solved = await send(config, dayNum, 1)
+        const solved = await send(config, yearNum, dayNum, 1)
 
         if (solved) {
-          await send(config, dayNum, 2)
+          await send(config, yearNum, dayNum, 2)
         }
         break
       case "help":
@@ -247,10 +297,10 @@ const dev = (dayRaw: string | undefined) => {
         console.log("Command not supported")
         break
     }
-    listenToInput()
+    listenToInput(year)
   }
 
-  listenToInput()
+  listenToInput(year)
 }
 
 export default dev

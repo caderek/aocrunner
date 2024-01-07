@@ -21,6 +21,7 @@ const getDayData = () => {
 
   if (!dayDir) {
     return {
+      year: null,
       day: null,
       inputFile: null,
     }
@@ -33,7 +34,8 @@ const getDayData = () => {
   }
 
   return {
-    day: Number(dayDir[dayDir.length - 1].slice(-2)),
+    year: Number(dayDir[dayDir.length - 2]),
+	day: Number(dayDir[dayDir.length - 1].slice(-2)),
     inputFile: [...dayDir, "input.txt"].join(path.sep),
   }
 }

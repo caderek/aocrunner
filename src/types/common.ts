@@ -1,23 +1,35 @@
 export type Setup = {
-  year: number
-  name: string
-  language: "ts" | "js"
-  packageManager: "npm" | "yarn" | "pnpm"
-  author: string
-  semicolons: boolean
-  strict: boolean
+	name: string
+    year: number
+    language: "ts" | "js"
+	packageManager: "npm" | "yarn" | "pnpm"
+	author: string
+	semicolons: boolean
+	strict: boolean
 }
 
-type DayConfig = {
+type PartConfig = {
   solved: boolean
   result: any
   attempts: any[]
   time: null | number
 }
+  
+  
+export type DayConfig = {
+  title: null | string;
+  part1: PartConfig; 
+  part2: PartConfig 
+}
+
+export type YearConfig = {
+  year: number
+  days: DayConfig[]
+}
 
 export type Config = {
+  packageManager: "npm" | "yarn" | "pnpm"
+  language: "ts" | "js"
   version: number
-  year: number
-  language: "js" | "ts"
-  days: { part1: DayConfig; part2: DayConfig }[]
+  years: YearConfig[]
 }

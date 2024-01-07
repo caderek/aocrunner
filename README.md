@@ -10,11 +10,11 @@ This repo contains the utility library to create and run [Advent of Code](https:
 
 - Creates JavaScript or TypeScript repository for AoC solutions with a simple CLI menu.
 - Runs your solutions in watch mode (with extremely fast compilation for TS using [esbuild](https://esbuild.github.io/)).
-- Allows you to fetch the input and send the solutions directly via terminal.
+- Allows you to fetch the sample input, problem input and send the solutions directly via terminal.
 - Prevents you from sending empty solutions and incorrect solutions twice (so you won't accidentally get the time penalty).
 - Provides a template for AoC solutions that you can customize.
 - Takes care of loading the input, measuring solution time, and running simple unit tests (supports async and sync code).
-- Automatically creates and updates README file.
+- Automatically creates and updates global, year, and day README files.
 
 ## Installation
 
@@ -32,18 +32,18 @@ It will guide you through the configuration with simple CLI menu.
 - initialize your version control system (ex: `git init`) _(optional)_
 - add your AoC session key `AOC_SESSION_KEY` to the `.env` file (you can find it in cookie file when you sign in at [adventofcode.com](https://adventofcode.com/)) _(optional)_
 - customize your template folder `src/template` _(optional)_
-- start solving the puzzles by running `start <day_number>` command with your package manager, for example:
+- start solving the puzzles by running `start <year_number> <day_number>` command with your package manager, for example:
 
 ```
-npm start 1
+npm start 2023 1
 
 // or
 
-yarn start 1
+yarn start 2023 1
 
 // or
 
-pnpm start 1
+pnpm start 2023 1
 ```
 
 ## Join my leaderboard
@@ -71,7 +71,7 @@ Starting from version 1.7.0 AoC Runner sets the correct request header as [reque
 
 This library creates modern, ESM compatible project - that means that you have to specify the extensions in your imports (that are not imported from `node_modules`).
 
-Always use `.js` extension for custom imports, even when importing `.ts` files (TypeScript ignores them, but the compiled code relies on them).
+**Always use `.js` extension for custom imports, even when importing `.ts` files (TypeScript ignores them, but the compiled code relies on them).**
 
 Examples:
 
