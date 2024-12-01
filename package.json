@@ -22,26 +22,26 @@
   "author": "Maciej Caderek",
   "license": "ISC",
   "devDependencies": {
-    "@types/common-tags": "^1.8.1",
-    "@types/express": "^4.17.14",
+    "@types/common-tags": "^1.8.4",
+    "@types/express": "^4.17.21",
     "@types/jsdom": "^20.0.1",
-    "@types/node": "^18.11.10",
-    "@types/prompts": "^2.4.1",
-    "express": "^4.18.2",
-    "prettier": "^2.8.0",
-    "ts-node": "^10.9.1"
+    "@types/node": "^18.19.67",
+    "@types/prompts": "^2.4.9",
+    "express": "^4.21.1",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "chokidar": "^3.5.3",
+    "chokidar": "^3.6.0",
     "common-tags": "^1.8.2",
-    "dotenv": "^16.0.3",
-    "esbuild": "^0.15.16",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.15.18",
     "jsdom": "^20.0.3",
     "kleur": "^4.1.5",
-    "node-fetch": "^3.3.0",
+    "node-fetch": "^3.3.2",
     "prompts": "^2.4.2",
-    "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "tslib": "^2.8.1",
+    "typescript": "^4.9.5"
   },
   "engines": {
     "node": ">=16.13.0"
