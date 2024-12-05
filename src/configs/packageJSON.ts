@@ -19,13 +19,13 @@ const packageJSON = ({ year, language, author }: Setup) => {
     author: author ?? "",
     license: "ISC",
     devDependencies: {
-      "@types/node": "^16.11.6",
+      "@types/node": "^18.19.67",
       aocrunner: `^${version}`,
       prettier: "^2.8.0",
     },
     dependencies: {},
     engines: {
-      node: ">=16.13.0",
+      node: ">=18.12.0",
     },
   }
 }
