@@ -14,7 +14,6 @@ import prettierignoreTXT from "../configs/prettierignoreTXT.js"
 import runnerJSON from "../configs/runnerJSON.js"
 import envTXT from "../configs/envTXT.js"
 import readmeMD from "../configs/readmeMD.js"
-import { readConfigFromPackageJson } from "../utils/readPackageJson.js"
 
 import type { Setup } from "../types/common"
 
@@ -22,8 +21,6 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const init = async () => {
   console.log("Initializing")
-
-  await readConfigFromPackageJson()
 
   const setup: Setup = await initPrompt()
 
@@ -59,6 +56,9 @@ const init = async () => {
   fs.mkdirSync(srcDir, { recursive: true })
 
   const config = runnerJSON(setup)
+
+  // set tabWidth in ENV to write files with expected widths
+  process.env.aocrunner_tabWidth = String(setup.tabWidth)
 
   save(dir, "package.json", packageJSON(setup))
   save(dir, ".prettierrc.json", prettierJSON(setup))
