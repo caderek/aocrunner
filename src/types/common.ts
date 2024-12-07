@@ -6,6 +6,7 @@ export type Setup = {
   author: string
   semicolons: boolean
   tabWidth: number
+  nodeVersion: number
   strict: boolean
 }
 

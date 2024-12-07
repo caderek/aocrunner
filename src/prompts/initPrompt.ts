@@ -17,6 +17,16 @@ const initPrompt = () => {
     .map((val, i) => val + i)
     .reverse()
 
+  // currently, 18 is oldest supported version, 23 is most up-todate, 24 to be released in Q2 2025
+  const nodeVersions = new Array(24 + 1 - 18)
+    .fill(18)
+    .map((val, i) => val + i)
+    .reverse()
+  const defaultNodeVersion: number = +process.version.replace(
+    /^v(\d+)\..*$/,
+    "$1",
+  )
+
   let author = ""
 
   try {
@@ -88,6 +98,14 @@ const initPrompt = () => {
           { title: "pnpm", value: "pnpm" },
         ],
         initial: 0,
+      },
+      {
+        type: "select",
+        name: "nodeVersion",
+        message: "NodeJS Version to use",
+        hint: "hint",
+        choices: nodeVersions.map((value) => ({ title: value, value })),
+        initial: Math.max(0, nodeVersions.indexOf(defaultNodeVersion)),
       },
     ],
     { onCancel },
