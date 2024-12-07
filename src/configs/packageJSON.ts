@@ -20,7 +20,7 @@ const packageJSON = ({ year, language, author, tabWidth }: Setup) => {
     author: author ?? "",
     license: "ISC",
     aocrunner: {
-      tabWidth
+      tabWidth,
     },
     devDependencies: {
       ...tsdeps,

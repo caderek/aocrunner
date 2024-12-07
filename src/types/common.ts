@@ -5,7 +5,7 @@ export type Setup = {
   packageManager: "npm" | "yarn" | "pnpm"
   author: string
   semicolons: boolean
-  tabWidth: number,
+  tabWidth: number
   strict: boolean
 }
 
@@ -27,5 +27,5 @@ export type PackageConfig = {
   tabWidth: number
 }
 export const PackageConfigDefaults = {
-  tabWidth: 2
+  tabWidth: 2,
 } as PackageConfig

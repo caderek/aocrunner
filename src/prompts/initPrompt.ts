@@ -70,7 +70,7 @@ const initPrompt = () => {
         message: "Tab width (adjust later in package.json and prettierrc.json)",
         initial: PackageConfigDefaults.tabWidth,
         min: PackageConfigDefaults.tabWidth,
-        max: 8
+        max: 8,
       },
       {
         type: "text",
