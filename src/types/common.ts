@@ -6,6 +6,7 @@ export type Setup = {
   author: string
   semicolons: boolean
   strict: boolean
+  packageManagerVersion?: string
 }
 
 type DayConfig = {
