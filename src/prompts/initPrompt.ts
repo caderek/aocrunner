@@ -1,6 +1,7 @@
 import prompts from "prompts"
 import { execSync } from "child_process"
 import kleur from "kleur"
+import { PackageConfigDefaults } from "../types/common.js"
 
 const onCancel = () => {
   console.log(kleur.yellow("Aborting!"))
@@ -15,6 +16,16 @@ const initPrompt = () => {
     .fill(firstYear)
     .map((val, i) => val + i)
     .reverse()
+
+  // currently, 18 is oldest supported version, 23 is most up-todate, 24 to be released in Q2 2025
+  const nodeVersions = new Array(24 + 1 - 18)
+    .fill(18)
+    .map((val, i) => val + i)
+    .reverse()
+  const defaultNodeVersion: number = +process.version.replace(
+    /^v(\d+)\..*$/,
+    "$1",
+  )
 
   let author = ""
 
@@ -64,6 +75,14 @@ const initPrompt = () => {
         inactive: "no",
       },
       {
+        type: "number",
+        name: "tabWidth",
+        message: "Tab width (adjust later in package.json and prettierrc.json)",
+        initial: PackageConfigDefaults.tabWidth,
+        min: PackageConfigDefaults.tabWidth,
+        max: 8,
+      },
+      {
         type: "text",
         name: "author",
         message: `Author`,
@@ -79,6 +98,14 @@ const initPrompt = () => {
           { title: "pnpm", value: "pnpm" },
         ],
         initial: 0,
+      },
+      {
+        type: "select",
+        name: "nodeVersion",
+        message: "NodeJS Version to use",
+        hint: "hint",
+        choices: nodeVersions.map((value) => ({ title: value, value })),
+        initial: Math.max(0, nodeVersions.indexOf(defaultNodeVersion)),
       },
     ],
     { onCancel },

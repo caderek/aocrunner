@@ -5,6 +5,8 @@ export type Setup = {
   packageManager: "npm" | "yarn" | "pnpm"
   author: string
   semicolons: boolean
+  tabWidth: number
+  nodeVersion: number
   strict: boolean
 }
 
@@ -21,3 +23,10 @@ export type Config = {
   language: "js" | "ts"
   days: { part1: DayConfig; part2: DayConfig }[]
 }
+
+export type PackageConfig = {
+  tabWidth: number
+}
+export const PackageConfigDefaults = {
+  tabWidth: 2,
+} as PackageConfig

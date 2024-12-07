@@ -1,8 +1,15 @@
 import type { Setup } from "../types/common"
 import version from "../version.js"
 
-const packageJSON = ({ year, language, author }: Setup) => {
+const packageJSON = ({
+  year,
+  language,
+  author,
+  tabWidth,
+  nodeVersion,
+}: Setup) => {
   const build = language === "ts" ? { build: "aocrunner build" } : {}
+  const tsdeps = language === "ts" ? { "@types/node": `^${nodeVersion}` } : {}
 
   return {
     name: `aoc${year}`,
@@ -18,14 +25,17 @@ const packageJSON = ({ year, language, author }: Setup) => {
     keywords: ["aoc"],
     author: author ?? "",
     license: "ISC",
+    aocrunner: {
+      tabWidth,
+    },
     devDependencies: {
-      "@types/node": "^16.11.6",
+      ...tsdeps,
       aocrunner: `^${version}`,
       prettier: "^2.8.0",
     },
     dependencies: {},
     engines: {
-      node: ">=16.13.0",
+      node: `^${nodeVersion}`,
     },
   }
 }

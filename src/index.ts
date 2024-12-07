@@ -4,6 +4,9 @@ import { stripIndent } from "common-tags"
 import { saveConfig, readConfig } from "./io/config.js"
 import toFixed from "./utils/toFixed.js"
 import getDayData from "./utils/getDayData.js"
+import { readConfigFromPackageJson } from "./utils/readPackageJson.js"
+
+readConfigFromPackageJson()
 
 type Tests = {
   name?: string

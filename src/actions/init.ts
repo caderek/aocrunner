@@ -57,6 +57,9 @@ const init = async () => {
 
   const config = runnerJSON(setup)
 
+  // set tabWidth in ENV to write files with expected widths
+  process.env.aocrunner_tabWidth = String(setup.tabWidth)
+
   save(dir, "package.json", packageJSON(setup))
   save(dir, ".prettierrc.json", prettierJSON(setup))
   save(dir, ".gitignore", gitignoreTXT(setup))
