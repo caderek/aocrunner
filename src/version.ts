@@ -1,2 +1,2 @@
 /* This file is auto-generated - do not modify */
-export default "1.9.6"
+export default "1.10.0"

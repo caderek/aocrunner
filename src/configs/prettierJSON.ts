@@ -1,6 +1,6 @@
 import type { Setup } from "../types/common"
 
-const prettierJSON = ({ semicolons }: Setup) => {
+const prettierJSON = ({ semicolons, tabWidth }: Setup) => {
   return {
     arrowParens: "always",
     bracketSpacing: true,
@@ -8,7 +8,7 @@ const prettierJSON = ({ semicolons }: Setup) => {
     proseWrap: "preserve",
     semi: semicolons,
     singleQuote: false,
-    tabWidth: 2,
+    tabWidth,
     useTabs: false,
     trailingComma: "all",
   }

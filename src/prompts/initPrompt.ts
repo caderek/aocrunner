@@ -1,6 +1,7 @@
 import prompts from "prompts"
 import { execSync } from "child_process"
 import kleur from "kleur"
+import { PackageConfigDefaults } from "../types/common.js"
 
 const onCancel = () => {
   console.log(kleur.yellow("Aborting!"))
@@ -62,6 +63,14 @@ const initPrompt = () => {
         initial: true,
         active: "yes",
         inactive: "no",
+      },
+      {
+        type: "number",
+        name: "tabWidth",
+        message: "Tab width (adjust later in package.json and prettierrc.json)",
+        initial: PackageConfigDefaults.tabWidth,
+        min: PackageConfigDefaults.tabWidth,
+        max: 8
       },
       {
         type: "text",

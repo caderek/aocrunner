@@ -14,6 +14,7 @@ import prettierignoreTXT from "../configs/prettierignoreTXT.js"
 import runnerJSON from "../configs/runnerJSON.js"
 import envTXT from "../configs/envTXT.js"
 import readmeMD from "../configs/readmeMD.js"
+import { readConfigFromPackageJson } from "../utils/readPackageJson.js"
 
 import type { Setup } from "../types/common"
 
@@ -21,6 +22,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const init = async () => {
   console.log("Initializing")
+
+  await readConfigFromPackageJson()
 
   const setup: Setup = await initPrompt()
 

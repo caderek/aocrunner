@@ -6,7 +6,7 @@ const readConfig = (): Config => {
 }
 
 const saveConfig = (config: Config) => {
-  const data = JSON.stringify(config, null, 2)
+  const data = JSON.stringify(config, null, +(process.env.aocrunner_tabWidth||2))
   fs.writeFileSync(".aocrunner.json", data)
 }
 
