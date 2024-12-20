@@ -13,7 +13,7 @@ const createVersionFile = () => {
 
   fs.writeFileSync(
     "src/version.ts",
-    `/* This file is auto-generated - do not modify */\nexport default "${packageInfo.version}"`,
+    `/* This file is auto-generated - do not modify */\nexport default "${packageInfo.version}"\n`,
   )
 }
 
